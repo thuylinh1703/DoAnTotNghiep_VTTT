@@ -1,0 +1,196 @@
+<div class="bg-white pt-5" *ngIf="product">
+    <div class="container py-5">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="mb-5">
+            <ol class="breadcrumb bg-transparent p-0 small text-uppercase tracking-widest">
+                <li class="breadcrumb-item"><a routerLink="/" class="text-muted text-decoration-none">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a routerLink="/products" class="text-muted text-decoration-none">Bộ sưu tập</a></li>
+                <li class="breadcrumb-item active text-dark fw-bold" aria-current="page">{{ product.name }}</li>
+            </ol>
+        </nav>
+
+        <!-- HERO: gallery + info -->
+        <div class="row g-5 mb-5 pb-5">
+            <!-- Gallery -->
+            <div class="col-md-6">
+                <div class="position-relative bg-light overflow-hidden shadow-sm aspect-ratio-1x1 d-flex align-items-center justify-content-center">
+                    <img *ngIf="selectedImage" [src]="getImageUrl(selectedImage)" [alt]="product.name" class="img-fluid w-100 h-100 object-cover">
+                    <i *ngIf="!selectedImage" class="bi bi-image text-muted opacity-20 display-1"></i>
+                    
+                    <span *ngIf="product.isNew" class="position-absolute top-0 start-0 m-3 badge badge-luxury shadow-sm">MỚI</span>
+                </div>
+
+                <div class="d-flex gap-3 mt-4 overflow-x-auto pb-2 scrollbar-hide" *ngIf="product.imageUrls && product.imageUrls.length > 1">
+                    <button *ngFor="let img of product.imageUrls" (click)="selectImage(img)"
+                        class="btn p-0 border-0 flex-shrink-0" style="width: 80px; height: 80px;"
+                        [ngClass]="selectedImage === img ? 'opacity-100 ring-gold' : 'opacity-50 hover-opacity-100'">
+                        <img [src]="getImageUrl(img)" class="w-100 h-100 object-cover border shadow-sm" [alt]="product.name">
+                    </button>
+                </div>
+            </div>
+
+            <!-- Info -->
+            <div class="col-md-6">
+                <div class="ps-md-4">
+                    <p class="text-muted small text-uppercase tracking-widest mb-2 fw-bold" style="font-size: 0.75rem;">{{ product.brand || 'LVT Heritage' }}</p>
+                    <h1 class="display-font fs-1 mb-4">{{ product.name }}</h1>
+
+                    <div class="d-flex align-items-center gap-3 mb-4">
+                        <div class="text-gold">
+                            <i class="bi bi-star-fill me-1" *ngFor="let s of [1,2,3,4,5]"></i>
+                        </div>
+                        <span class="text-muted small fw-bold">(4.8 / 5.0)</span>
+                        <span class="text-muted opacity-20">|</span>
+                        <span class="text-muted small text-uppercase tracking-wide">Mã: LVT-{{ product.id }}</span>
+                    </div>
+
+                    <div class="mb-4 pb-2">
+                        <span class="fs-2 fw-bold text-dark me-3">
+                            {{ (product.discountPrice || product.price) | number:'1.0-0' }}&#8363;
+                        </span>
+                        <span *ngIf="product.discountPrice" class="fs-5 text-muted text-decoration-line-through">
+                            {{ product.price | number:'1.0-0' }}&#8363;
+                        </span>
+                    </div>
+
+                    <div class="mb-4">
+                        <app-stock-indicator [stock]="product.quantity"></app-stock-indicator>
+                    </div>
+
+                    <div class="mb-5 pb-2">
+                        <h6 class="text-uppercase tracking-widest small fw-bold mb-3" style="font-size: 0.7rem;">Mô tả sơ lược:</h6>
+                        <p class="text-muted line-clamp-3 mb-0" style="font-size: 0.95rem; line-height: 1.7;">
+                            {{ product.description }}
+                        </p>
+                    </div>
+
+                    <!-- Quantity & Actions -->
+                    <div class="mb-5">
+                        <div class="row g-3 align-items-center">
+                            <div class="col-auto">
+                                <label class="text-uppercase tracking-widest small fw-bold mb-0" style="font-size: 0.7rem;">Số lượng:</label>
+                            </div>
+                            <div class="col-auto">
+                                <div class="input-group border bg-light" style="width: 140px;">
+                                    <button (click)="decrementQuantity()" class="btn btn-link text-dark text-decoration-none px-3" type="button">
+                                        <i class="bi bi-dash-lg"></i>
+                                    </button>
+                                    <input type="number" [(ngModel)]="quantity" 
+                                           class="form-control border-0 bg-transparent text-center shadow-none p-0 fw-bold" 
+                                           min="1" [max]="product.quantity" readonly>
+                                    <button (click)="incrementQuantity()" [disabled]="atMaxStock || outOfStock" 
+                                            class="btn btn-link text-dark text-decoration-none px-3" type="button">
+                                        <i class="bi bi-plus-lg"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-column flex-sm-row gap-3">
+                        <button (click)="buyNow()" [disabled]="loading || outOfStock"
+                            class="btn btn-dark rounded-0 flex-grow-1 py-3 text-uppercase letter-spacing-wide fw-bold shadow-sm">
+                            {{ outOfStock ? 'Sản Phẩm Tạm Hết' : 'Mua Ngay' }}
+                        </button>
+                        <button (click)="addToCart()" [disabled]="loading || outOfStock"
+                            class="btn btn-outline-dark rounded-0 flex-grow-1 py-3 text-uppercase letter-spacing-wide fw-bold shadow-sm">
+                            <i class="bi bi-cart3 me-2"></i> Thêm Vào Giỏ
+                        </button>
+                    </div>
+                    
+                    <div class="mt-5 pt-3 border-top d-flex gap-4">
+                        <div class="d-flex align-items-center gap-2 text-muted small">
+                            <i class="bi bi-shield-check fs-5 text-dark"></i>
+                            <span>Bảo hành 12 tháng</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-2 text-muted small">
+                            <i class="bi bi-truck fs-5 text-dark"></i>
+                            <span>Miễn phí vận chuyển</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- DESCRIPTION TABS -->
+<section class="bg-light py-5" *ngIf="product">
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h2 class="display-font fs-3 mb-5 border-bottom d-inline-block pb-3 px-5">Thông Tin Chi Tiết</h2>
+                <div class="text-start text-muted" style="line-height: 1.8; white-space: pre-line;">
+                    {{ product.description }}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- RELATED PRODUCTS -->
+<section class="bg-white py-5 border-top" *ngIf="product">
+    <div class="container">
+        <h2 class="display-font fs-3 mb-5 text-center">Bạn Có Thể Thích</h2>
+        <app-related-products [productId]="product.id" (addToCart)="onRelatedAddToCart($event)"></app-related-products>
+    </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="bg-white py-5 border-top" *ngIf="product">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h2 class="display-font fs-3 mb-5 text-center">Đánh Giá & Phản Hồi</h2>
+
+                <div class="card border-0 bg-light p-4 mb-5 rounded-0">
+                    <app-review-summary [summary]="reviewSummary"></app-review-summary>
+                </div>
+
+                <div class="mb-5" *ngIf="isLoggedIn(); else reviewLoginHint">
+                    <app-review-form
+                        *ngIf="!reviewEligibility || reviewEligibility.eligible; else reviewBlocked"
+                        [productId]="product.id"
+                        (reviewAdded)="onReviewAdded()">
+                    </app-review-form>
+
+                    <ng-template #reviewBlocked>
+                        <div class="alert alert-warning border-0 rounded-0 p-4">
+                            <i class="bi bi-info-circle me-2"></i> {{ eligibilityHint }}
+                        </div>
+                    </ng-template>
+                </div>
+
+                <ng-template #reviewLoginHint>
+                    <div class="alert alert-light border p-4 text-center rounded-0 mb-5">
+                        <p class="mb-3">Vui lòng đăng nhập để chia sẻ cảm nhận của bạn về sản phẩm này.</p>
+                        <a routerLink="/login" class="btn btn-dark btn-sm rounded-0 px-4">ĐĂNG NHẬP</a>
+                    </div>
+                </ng-template>
+
+                <div class="mt-4">
+                    <app-review-list
+                        [productId]="product.id"
+                        [refreshKey]="reviewRefreshKey"
+                        (loaded)="onReviewsLoaded($event)">
+                    </app-review-list>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container py-5 my-5 text-center" *ngIf="!product && !loading">
+    <h2 class="display-font">Không tìm thấy sản phẩm</h2>
+    <p class="text-muted mb-4">Sản phẩm này có thể đã ngừng kinh doanh hoặc không còn tồn tại.</p>
+    <a routerLink="/products" class="btn btn-dark rounded-0 px-5 py-3 shadow-sm">XEM CÁC SẢN PHẨM KHÁC</a>
+</div>
+
+<style>
+    .aspect-ratio-1x1 { aspect-ratio: 1 / 1; }
+    .object-cover { object-fit: cover; }
+    .ring-gold { outline: 2px solid var(--lvt-accent); }
+    .hover-opacity-100:hover { opacity: 1 !important; }
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+</style>
+

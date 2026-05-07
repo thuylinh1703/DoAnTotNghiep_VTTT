@@ -1,0 +1,183 @@
+<div class="row g-4 mb-5" *ngIf="stats">
+    <div class="col-12 d-flex justify-content-between align-items-end">
+        <div>
+            <h1 class="display-font fs-2 text-dark mb-1">Bảng Điều Khiển</h1>
+            <p class="text-muted small text-uppercase tracking-widest mb-0">Hoạt động kinh doanh thời gian thực</p>
+        </div>
+        <div class="d-flex gap-3">
+            <select [value]="selectedYear" (change)="onYearChange($event)" 
+                    class="form-select border-0 shadow-sm rounded-0 small py-2 px-3 fw-bold" style="width: 150px;">
+                <option *ngFor="let y of years" [value]="y">Năm {{ y }}</option>
+            </select>
+            <div class="bg-white px-3 py-2 shadow-sm d-flex align-items-center gap-2 small">
+                <span class="pulse-green"></span>
+                <span class="text-muted text-uppercase tracking-widest fw-bold" style="font-size: 0.6rem;">{{ stats?.currentDate }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Grid -->
+<div class="row g-4 mb-5" *ngIf="stats">
+    <div class="col-md-6 col-xl-3">
+        <div class="card border-0 shadow-sm rounded-0 p-4 h-100 position-relative overflow-hidden">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <div class="stat-icon bg-light text-dark rounded-0 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                    <i class="bi bi-currency-dollar fs-4"></i>
+                </div>
+                <span [ngClass]="stats.revenueGrowth >= 0 ? 'bg-success text-success' : 'bg-danger text-danger'"
+                      class="badge bg-opacity-10 rounded-pill px-2 py-1 small">
+                    {{ stats.revenueGrowth >= 0 ? '+' : '' }}{{ stats.revenueGrowth | number:'1.1-1' }}%
+                </span>
+            </div>
+            <p class="text-muted small text-uppercase tracking-widest fw-bold mb-1" style="font-size: 0.65rem;">Tổng doanh thu</p>
+            <h3 class="display-font fs-3 text-dark mb-0">{{ stats.totalRevenue | number:'1.0-0' }}&#8363;</h3>
+            <div class="position-absolute bottom-0 start-0 w-100 bg-gold" style="height: 3px;"></div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+        <div class="card border-0 shadow-sm rounded-0 p-4 h-100 position-relative overflow-hidden">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <div class="stat-icon bg-light text-dark rounded-0 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                    <i class="bi bi-cart-check fs-4"></i>
+                </div>
+                <span [ngClass]="stats.ordersGrowth >= 0 ? 'bg-success text-success' : 'bg-danger text-danger'"
+                      class="badge bg-opacity-10 rounded-pill px-2 py-1 small">
+                    {{ stats.ordersGrowth >= 0 ? '+' : '' }}{{ stats.ordersGrowth | number:'1.1-1' }}%
+                </span>
+            </div>
+            <p class="text-muted small text-uppercase tracking-widest fw-bold mb-1" style="font-size: 0.65rem;">Đơn hàng mới</p>
+            <h3 class="display-font fs-3 text-dark mb-0">{{ stats.totalOrders }}</h3>
+            <div class="position-absolute bottom-0 start-0 w-100 bg-dark" style="height: 3px;"></div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+        <div class="card border-0 shadow-sm rounded-0 p-4 h-100 position-relative overflow-hidden">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <div class="stat-icon bg-light text-dark rounded-0 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                    <i class="bi bi-people fs-4"></i>
+                </div>
+                <span [ngClass]="stats.usersGrowth >= 0 ? 'bg-success text-success' : 'bg-danger text-danger'"
+                      class="badge bg-opacity-10 rounded-pill px-2 py-1 small">
+                    {{ stats.usersGrowth >= 0 ? '+' : '' }}{{ stats.usersGrowth | number:'1.1-1' }}%
+                </span>
+            </div>
+            <p class="text-muted small text-uppercase tracking-widest fw-bold mb-1" style="font-size: 0.65rem;">Khách hàng</p>
+            <h3 class="display-font fs-3 text-dark mb-0">{{ stats.totalUsers }}</h3>
+            <div class="position-absolute bottom-0 start-0 w-100 bg-gold" style="height: 3px;"></div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+        <div class="card border-0 shadow-sm rounded-0 p-4 h-100 position-relative overflow-hidden">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <div class="stat-icon bg-light text-dark rounded-0 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                    <i class="bi bi-star fs-4"></i>
+                </div>
+                <span [ngClass]="stats.reviewsGrowth >= 0 ? 'bg-success text-success' : 'bg-danger text-danger'"
+                      class="badge bg-opacity-10 rounded-pill px-2 py-1 small">
+                    {{ stats.reviewsGrowth >= 0 ? '+' : '' }}{{ stats.reviewsGrowth | number:'1.1-1' }}%
+                </span>
+            </div>
+            <p class="text-muted small text-uppercase tracking-widest fw-bold mb-1" style="font-size: 0.65rem;">Đánh giá mới</p>
+            <h3 class="display-font fs-3 text-dark mb-0">{{ stats.totalReviews }}</h3>
+            <div class="position-absolute bottom-0 start-0 w-100 bg-dark" style="height: 3px;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts & Tables -->
+<div class="row g-5" *ngIf="stats">
+    <!-- Revenue Chart Area -->
+    <div class="col-xl-7">
+        <div class="card border-0 shadow-sm rounded-0 h-100 p-4 p-lg-5 bg-white">
+            <div class="d-flex justify-content-between align-items-center mb-5">
+                <h3 class="display-font fs-4 mb-0">Biểu Đồ Doanh Thu {{ selectedYear }}</h3>
+                <span class="text-muted small text-uppercase tracking-widest fw-bold">Thống kê hàng tháng</span>
+            </div>
+
+            <div class="chart-container d-flex align-items-end justify-content-between gap-2 pt-5 px-2" style="height: 300px;">
+                <div *ngFor="let item of monthlyData" class="flex-grow-1 position-relative group d-flex flex-column align-items-center h-100 justify-content-end">
+                    <!-- Value Label -->
+                    <div class="position-absolute top-0 start-50 translate-middle-x text-dark small fw-bold mb-2" style="font-size: 0.65rem;">
+                        {{ item.revenue | number:'1.0-0' }}
+                    </div>
+                    <!-- Bar -->
+                    <div class="w-100 rounded-0 overflow-hidden d-flex flex-column justify-content-end h-100 bg-light">
+                        <div class="w-100 bg-dark transition-all duration-500 ease-out" 
+                             [style.height.%]="item.percentage"></div>
+                    </div>
+                    <!-- Label -->
+                    <span class="mt-3 small text-muted text-uppercase fw-bold" style="font-size: 0.6rem;">T{{ item.month }}</span>
+                </div>
+            </div>
+
+            <div class="mt-5 pt-4 border-top d-flex justify-content-between align-items-center">
+                <p class="text-muted small mb-0">Cập nhật lúc: {{ stats.currentDate }}</p>
+                <div class="text-end">
+                    <span class="text-muted small text-uppercase tracking-widest">Tổng cộng:</span>
+                    <h4 class="display-font fs-5 text-dark mb-0">{{ stats.totalRevenue | number:'1.0-0' }}&#8363;</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="col-xl-5">
+        <div class="card border-0 shadow-sm rounded-0 h-100 p-4 p-lg-5 bg-white">
+            <div class="d-flex justify-content-between align-items-center mb-5">
+                <h3 class="display-font fs-4 mb-0">Đơn Hàng Gần Đây</h3>
+                <a routerLink="/admin/orders" class="text-gold small text-uppercase tracking-widest fw-bold text-decoration-none">Xem tất cả <i class="bi bi-chevron-right"></i></a>
+            </div>
+
+            <div class="d-flex flex-column gap-3">
+                <div *ngFor="let order of stats.recentOrders" 
+                     class="d-flex align-items-center justify-content-between p-3 border-bottom hover-bg-light transition-all">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="order-id bg-light text-muted small d-flex align-items-center justify-content-center fw-bold" style="width: 40px; height: 40px;">
+                            #{{ order.orderCode.slice(-3) }}
+                        </div>
+                        <div>
+                            <p class="mb-0 fw-bold text-dark small text-truncate" style="max-width: 150px;">{{ order.receiverName }}</p>
+                            <p class="mb-0 text-muted small" style="font-size: 0.65rem;">{{ order.createdAt | date:'dd/MM HH:mm' }}</p>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <p class="mb-0 fw-bold text-dark small">{{ order.finalAmount || order.totalAmount | number:'1.0-0' }}&#8363;</p>
+                        <span class="text-uppercase tracking-widest text-muted" style="font-size: 0.55rem;">{{ order.status }}</span>
+                    </div>
+                </div>
+
+                <div *ngIf="!stats.recentOrders || stats.recentOrders.length === 0" class="text-center py-5">
+                    <i class="bi bi-inbox fs-1 text-muted opacity-25"></i>
+                    <p class="text-muted small mt-2">Chưa có dữ liệu giao dịch.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="loading" class="d-flex flex-column align-items-center justify-content-center py-5">
+    <div class="spinner-border text-gold mb-3" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="text-muted small text-uppercase tracking-widest fw-bold">Đang đồng bộ dữ liệu hệ thống...</p>
+</div>
+
+<style>
+    .stat-icon { background-color: #f8f9fa; }
+    .pulse-green {
+        width: 8px; height: 8px; background-color: #28a745; border-radius: 50%;
+        box-shadow: 0 0 0 rgba(40, 167, 69, 0.4); animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7); }
+        70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
+        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
+    }
+    .hover-bg-light:hover { background-color: #f8f9fa !important; cursor: pointer; }
+    .transition-all { transition: all 0.3s ease; }
+</style>
+

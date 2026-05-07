@@ -1,0 +1,34 @@
+<div class="rounded-2xl border border-[#d2d2d7] p-5 bg-white">
+	<h3 class="text-[18px] font-semibold tracking-[-0.022em] text-[#1d1d1f]">Viết đánh giá</h3>
+
+	<div class="mt-4 flex items-center gap-1">
+		<button
+			type="button"
+			*ngFor="let star of [1,2,3,4,5]"
+			(mouseenter)="hoverRating = star"
+			(mouseleave)="hoverRating = 0"
+			(click)="setRating(star)"
+			class="w-8 h-8 text-xl transition-transform hover:scale-110">
+			<span [class.text-[#ff9f0a]]="star <= (hoverRating || rating)" [class.text-[#d2d2d7]]="star > (hoverRating || rating)">★</span>
+		</button>
+	</div>
+
+	<textarea
+		[(ngModel)]="comment"
+		rows="4"
+		maxlength="1000"
+		placeholder="Chia sẻ trải nghiệm của bạn (ít nhất 10 ký tự)..."
+		class="mt-4 w-full rounded-xl border border-[#d2d2d7] px-3 py-2 text-[14px] text-[#1d1d1f] outline-none focus:border-[#0071e3]"></textarea>
+
+	<div class="mt-2 text-[12px] text-[rgba(0,0,0,0.56)] text-right">
+		{{ comment.length }}/1000
+	</div>
+
+	<button
+		type="button"
+		(click)="submit()"
+		[disabled]="submitting"
+		class="mt-4 h-10 px-4 rounded-lg bg-[#0071e3] text-white text-[14px] hover:bg-[#0077ed] transition-colors disabled:opacity-50">
+		{{ submitting ? 'Đang gửi...' : 'Gửi đánh giá' }}
+	</button>
+</div>

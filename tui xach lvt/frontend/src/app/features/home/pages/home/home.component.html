@@ -1,0 +1,189 @@
+<!-- ============================================================
+     HERO SECTION — Cinematic & Elegant
+     ============================================================ -->
+<section class="hero-section position-relative overflow-hidden bg-dark text-white d-flex align-items-center" style="min-height: 85vh;">
+    <div class="position-absolute inset-0 w-100 h-100 opacity-60">
+        <img *ngIf="banners.length > 0 && banners[0].imageUrl" 
+             [src]="getImageUrl(banners[0].imageUrl)"
+             class="w-100 h-100 object-cover" 
+             [alt]="banners[0].title">
+        <div *ngIf="banners.length === 0 || !banners[0].imageUrl" 
+             class="w-100 h-100 bg-secondary d-flex align-items-center justify-content-center opacity-20">
+            <i class="bi bi-bag-heart display-1"></i>
+        </div>
+    </div>
+    
+    <div class="container position-relative z-1 text-center py-5">
+        <h1 class="display-1 display-font mb-4 text-white animate__animated animate__fadeInUp">
+            {{ banners.length > 0 ? banners[0].title : 'Khai Phá Vẻ Đẹp Bản Thể' }}
+        </h1>
+        <p class="lead mb-5 mx-auto opacity-80 letter-spacing-wide animate__animated animate__fadeInUp animate__delay-1s" style="max-width: 600px;">
+            Thiết kế tối giản. Chất liệu nguyên bản. Tôn vinh phong cách riêng biệt của bạn mỗi ngày.
+        </p>
+        <div class="d-flex justify-content-center gap-3 animate__animated animate__fadeInUp animate__delay-2s">
+            <a routerLink="/products" class="btn btn-primary px-5 py-3">Bộ Sưu Tập</a>
+            <a [routerLink]="banners.length > 0 && banners[0].linkUrl ? banners[0].linkUrl : '/products'" 
+               class="btn btn-outline-light px-5 py-3 rounded-0 text-uppercase letter-spacing-wide" style="font-size: 0.8rem;">Mua Ngay</a>
+        </div>
+    </div>
+    
+    <!-- Subtle overlay gradient -->
+    <div class="position-absolute bottom-0 start-0 w-100 h-25 bg-gradient-to-t from-dark"></div>
+</section>
+
+<!-- ============================================================
+     PROMINENT CATEGORIES — Minimalist Grid
+     ============================================================ -->
+<section class="py-5 bg-white">
+    <div class="container py-5">
+        <div class="section-title">
+            <h2 class="display-font fs-1">Danh Mục Nổi Bật</h2>
+            <p class="text-muted letter-spacing-wide text-uppercase" style="font-size: 0.75rem;">Định nghĩa phong cách của bạn</p>
+        </div>
+
+        <div class="row g-4 justify-content-center">
+            <div class="col-6 col-lg-3">
+                <a [routerLink]="['/products']" [queryParams]="{category: getCategoryIdByName('Nữ')}" class="category-tile text-decoration-none">
+                    <div class="bg-luxury-white p-5 text-center transition-all h-100 border-hover-gold">
+                        <i class="bi bi-bag-heart fs-1 text-dark mb-3 d-block"></i>
+                        <h4 class="fs-5 display-font mb-0 text-dark">Túi Xách Nữ</h4>
+                    </div>
+                </a>
+            </div>
+            <div class="col-6 col-lg-3">
+                <a [routerLink]="['/products']" [queryParams]="{category: getCategoryIdByName('Nam')}" class="category-tile text-decoration-none">
+                    <div class="bg-luxury-white p-5 text-center transition-all h-100 border-hover-gold">
+                        <i class="bi bi-briefcase fs-1 text-dark mb-3 d-block"></i>
+                        <h4 class="fs-5 display-font mb-0 text-dark">Túi Xách Nam</h4>
+                    </div>
+                </a>
+            </div>
+            <div class="col-6 col-lg-3">
+                <a [routerLink]="['/products']" [queryParams]="{category: getCategoryIdByName('Đeo chéo')}" class="category-tile text-decoration-none">
+                    <div class="bg-luxury-white p-5 text-center transition-all h-100 border-hover-gold">
+                        <i class="bi bi-handbag fs-1 text-dark mb-3 d-block"></i>
+                        <h4 class="fs-5 display-font mb-0 text-dark">Túi Đeo Chéo</h4>
+                    </div>
+                </a>
+            </div>
+            <div class="col-6 col-lg-3">
+                <a [routerLink]="['/products']" [queryParams]="{category: getCategoryIdByName('Balo')}" class="category-tile text-decoration-none">
+                    <div class="bg-luxury-white p-5 text-center transition-all h-100 border-hover-gold">
+                        <i class="bi bi-backpack fs-1 text-dark mb-3 d-block"></i>
+                        <h4 class="fs-5 display-font mb-0 text-dark">Balo Cao Cấp</h4>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     NEW ARRIVALS — Luxury Product Grid
+     ============================================================ -->
+<section *ngIf="newProducts.length > 0" class="py-5 bg-luxury-white">
+    <div class="container py-5">
+        <div class="d-flex align-items-end justify-content-between mb-5">
+            <div>
+                <h2 class="display-font fs-1 mb-0">Mới Nhất Tuần Này</h2>
+                <p class="text-muted mb-0">Những thiết kế vừa ra mắt từ các nghệ nhân LVT</p>
+            </div>
+            <a routerLink="/products" class="text-dark text-decoration-none border-bottom border-dark pb-1 text-uppercase letter-spacing-wide" style="font-size: 0.75rem;">Xem tất cả</a>
+        </div>
+
+        <div class="row g-4">
+            <div *ngFor="let product of newProducts" class="col-sm-6 col-lg-3">
+                <div class="luxury-card card h-100 shadow-sm border-0">
+                    <div class="position-relative overflow-hidden aspect-ratio-1x1 bg-white">
+                        <span class="position-absolute top-0 start-0 m-3 z-1 badge badge-luxury">NEW</span>
+                        <img *ngIf="product.primaryImage" 
+                             [src]="getImageUrl(product.primaryImage)"
+                             [alt]="product.name" 
+                             class="card-img-top w-100 h-100 object-cover">
+                        <div *ngIf="!product.primaryImage" class="w-100 h-100 d-flex align-items-center justify-content-center text-muted">
+                            <i class="bi bi-image fs-1 opacity-20"></i>
+                        </div>
+                        
+                        <!-- Quick Actions Overlay -->
+                        <div class="card-overlay position-absolute inset-0 bg-dark bg-opacity-10 d-flex align-items-end p-3 opacity-0 transition-all">
+                            <button (click)="addToCart(product.id)" class="btn btn-primary w-100 btn-sm py-2">THÊM VÀO GIỎ</button>
+                        </div>
+                    </div>
+
+                    <div class="card-body px-0 pt-3 bg-transparent">
+                        <p class="text-muted mb-1 text-uppercase tracking-widest" style="font-size: 0.65rem;">{{ product.brand || 'LVT Heritage' }}</p>
+                        <h5 class="card-title fs-6 display-font mb-2">
+                            <a [routerLink]="['/products', product.id]" class="text-dark text-decoration-none stretched-link">{{ product.name }}</a>
+                        </h5>
+                        <p class="card-text text-gold fw-bold">
+                            {{ (product.discountPrice || product.price) | number:'1.0-0' }}&#8363;
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     BLOG SECTION — Insightful & Aesthetic
+     ============================================================ -->
+<section *ngIf="latestBlogs.length > 0" class="py-5 bg-white border-top">
+    <div class="container py-5">
+        <div class="section-title">
+            <h2 class="display-font fs-1">Câu Chuyện & Cảm Hứng</h2>
+            <p class="text-muted">Góc nhìn thời trang và nghệ thuật sống</p>
+        </div>
+
+        <div class="row g-4">
+            <div *ngFor="let post of latestBlogs" class="col-md-4">
+                <div class="card border-0 bg-transparent h-100 blog-card">
+                    <div class="overflow-hidden mb-3 aspect-ratio-16x9">
+                        <img *ngIf="post.coverImageUrl" 
+                             [src]="getImageUrl(post.coverImageUrl)" 
+                             [alt]="post.title" 
+                             class="w-100 h-100 object-cover transition-transform">
+                    </div>
+                    <div>
+                        <h3 class="fs-5 display-font mb-2">
+                            <a [routerLink]="['/blog', post.slug]" class="text-dark text-decoration-none">{{ post.title }}</a>
+                        </h3>
+                        <p class="text-muted small line-clamp-3 mb-3">{{ post.excerpt || 'Khám phá bài viết mới nhất từ chúng tôi.' }}</p>
+                        <a [routerLink]="['/blog', post.slug]" class="text-gold text-decoration-none text-uppercase letter-spacing-wide fw-bold" style="font-size: 0.7rem;">Đọc Thêm</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .hero-section .inset-0 { top: 0; left: 0; right: 0; bottom: 0; }
+    .object-cover { object-fit: cover; }
+    .aspect-ratio-1x1 { aspect-ratio: 1 / 1; }
+    .aspect-ratio-16x9 { aspect-ratio: 16 / 9; }
+    .tracking-tight { letter-spacing: -0.02em; }
+    .tracking-widest { letter-spacing: 0.2em; }
+    .transition-all { transition: all 0.3s ease; }
+    
+    .category-tile:hover .bg-luxury-white {
+        background-color: #111 !important;
+        color: white !important;
+    }
+    .category-tile:hover h4, .category-tile:hover i {
+        color: white !important;
+    }
+    .border-hover-gold { border: 1px solid transparent; }
+    .category-tile:hover .border-hover-gold { border-color: var(--lvt-accent); }
+    
+    .luxury-card:hover .card-overlay { opacity: 1; }
+    .blog-card:hover img { transform: scale(1.05); }
+    
+    .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+</style>
+

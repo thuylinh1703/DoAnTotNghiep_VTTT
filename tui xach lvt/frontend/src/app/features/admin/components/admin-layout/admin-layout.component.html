@@ -1,0 +1,195 @@
+<div class="d-flex min-vh-100 bg-white">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar bg-white text-dark transition-all border-end shadow-sm overflow-hidden flex-shrink-0" 
+           [style.width.px]="isSidebarOpen ? 280 : 80">
+        
+        <!-- Logo Area -->
+        <div class="sidebar-header d-flex align-items-center px-4 border-bottom h-75px">
+            <div class="logo-box bg-black text-white d-flex align-items-center justify-content-center rounded fw-bold fs-4 flex-shrink-0 shadow-sm" style="width: 40px; height: 40px;">
+                L
+            </div>
+            <span *ngIf="isSidebarOpen" class="ms-3 display-font fs-6 text-dark fw-bold whitespace-nowrap overflow-hidden tracking-widest">LVT ADMIN</span>
+        </div>
+
+        <!-- Navigation -->
+        <div class="sidebar-body py-4 overflow-auto flex-grow-1 custom-scrollbar">
+            <nav class="nav flex-column px-3 gap-1">
+                <!-- Back to Shop -->
+                <a routerLink="/" 
+                   class="nav-link d-flex align-items-center rounded-3 py-3 px-3 mb-3 border bg-light transition-all">
+                    <i class="bi bi-shop fs-5 me-3 text-gold"></i>
+                    <span *ngIf="isSidebarOpen" class="text-nowrap small fw-bold text-uppercase letter-spacing-1 text-dark">Xem cửa hàng</span>
+                </a>
+
+                <!-- Group: Core -->
+                <div class="nav-label small text-uppercase tracking-widest px-3 mb-2 text-muted" *ngIf="isSidebarOpen" style="font-size: 0.65rem;">Quản trị hệ thống</div>
+                
+                <a routerLink="/admin/dashboard" routerLinkActive="active" 
+                   class="nav-link d-flex align-items-center rounded-3 py-3 px-3 transition-all">
+                    <i class="bi bi-speedometer2 fs-5 me-3"></i>
+                    <span *ngIf="isSidebarOpen" class="text-nowrap small fw-bold text-uppercase letter-spacing-1">Tổng quan</span>
+                </a>
+
+                <a routerLink="/admin/products" routerLinkActive="active" 
+                   class="nav-link d-flex align-items-center rounded-3 py-3 px-3 transition-all">
+                    <i class="bi bi-bag-plus fs-5 me-3"></i>
+                    <span *ngIf="isSidebarOpen" class="text-nowrap small fw-bold text-uppercase letter-spacing-1">Sản phẩm</span>
+                </a>
+
+                <a routerLink="/admin/categories" routerLinkActive="active" 
+                   class="nav-link d-flex align-items-center rounded-3 py-3 px-3 transition-all">
+                    <i class="bi bi-grid-3x3-gap fs-5 me-3"></i>
+                    <span *ngIf="isSidebarOpen" class="text-nowrap small fw-bold text-uppercase letter-spacing-1">Danh mục</span>
+                </a>
+
+                <a routerLink="/admin/orders" routerLinkActive="active" 
+                   class="nav-link d-flex align-items-center rounded-3 py-3 px-3 transition-all">
+                    <i class="bi bi-receipt fs-5 me-3"></i>
+                    <span *ngIf="isSidebarOpen" class="text-nowrap small fw-bold text-uppercase letter-spacing-1">Đơn hàng</span>
+                </a>
+
+                <a routerLink="/admin/users" routerLinkActive="active" 
+                   class="nav-link d-flex align-items-center rounded-3 py-3 px-3 transition-all">
+                    <i class="bi bi-people fs-5 me-3"></i>
+                    <span *ngIf="isSidebarOpen" class="text-nowrap small fw-bold text-uppercase letter-spacing-1">Khách hàng</span>
+                </a>
+
+                <a routerLink="/admin/reports" routerLinkActive="active" 
+                   class="nav-link d-flex align-items-center rounded-3 py-3 px-3 transition-all">
+                    <i class="bi bi-bar-chart-line fs-5 me-3"></i>
+                    <span *ngIf="isSidebarOpen" class="text-nowrap small fw-bold text-uppercase letter-spacing-1">Thống kê chi tiết</span>
+                </a>
+
+                <!-- Group: Marketing -->
+                <div class="nav-label small text-muted text-uppercase tracking-widest px-3 mt-4 mb-2 text-muted" *ngIf="isSidebarOpen" style="font-size: 0.65rem;">Marketing & Nội dung</div>
+
+                <a routerLink="/admin/reviews" routerLinkActive="active" 
+                   class="nav-link d-flex align-items-center rounded-3 py-3 px-3 transition-all">
+                    <i class="bi bi-star fs-5 me-3"></i>
+                    <span *ngIf="isSidebarOpen" class="text-nowrap small fw-bold text-uppercase letter-spacing-1">Đánh giá</span>
+                </a>
+
+                <a routerLink="/admin/banners" routerLinkActive="active" 
+                   class="nav-link d-flex align-items-center rounded-3 py-3 px-3 transition-all">
+                    <i class="bi bi-image fs-5 me-3"></i>
+                    <span *ngIf="isSidebarOpen" class="text-nowrap small fw-bold text-uppercase letter-spacing-1">Banner</span>
+                </a>
+
+                <a routerLink="/admin/coupons" routerLinkActive="active" 
+                   class="nav-link d-flex align-items-center rounded-3 py-3 px-3 transition-all">
+                    <i class="bi bi-ticket-perforated fs-5 me-3"></i>
+                    <span *ngIf="isSidebarOpen" class="text-nowrap small fw-bold text-uppercase letter-spacing-1">Mã giảm giá</span>
+                </a>
+
+                <a routerLink="/admin/blog" routerLinkActive="active" 
+                   class="nav-link d-flex align-items-center rounded-3 py-3 px-3 transition-all">
+                    <i class="bi bi-journal-richtext fs-5 me-3"></i>
+                    <span *ngIf="isSidebarOpen" class="text-nowrap small fw-bold text-uppercase letter-spacing-1">Blog</span>
+                </a>
+
+                <!-- Group: Support -->
+                <div class="nav-label small text-muted text-uppercase tracking-widest px-3 mt-4 mb-2 text-muted" *ngIf="isSidebarOpen" style="font-size: 0.65rem;">Hỗ trợ & Cài đặt</div>
+
+                <a routerLink="/admin/support-center" routerLinkActive="active" 
+                   class="nav-link d-flex align-items-center rounded-3 py-3 px-3 transition-all">
+                    <i class="bi bi-headset fs-5 me-3"></i>
+                    <span *ngIf="isSidebarOpen" class="text-nowrap small fw-bold text-uppercase letter-spacing-1">Trung tâm hỗ trợ</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Sidebar Footer -->
+        <div class="sidebar-footer p-3 border-top bg-light bg-opacity-50">
+            <button (click)="logout()" class="btn btn-outline-danger w-100 rounded-3 d-flex align-items-center justify-content-center py-2 border-0 shadow-none">
+                <i class="bi bi-box-arrow-right fs-5" [class.me-2]="isSidebarOpen"></i>
+                <span *ngIf="isSidebarOpen" class="fw-bold small text-uppercase letter-spacing-1">Đăng xuất</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow-1 d-flex flex-column min-w-0">
+        <!-- Top Navbar -->
+        <header class="navbar navbar-expand bg-white border-bottom h-75px px-4 sticky-top">
+            <div class="container-fluid px-0">
+                <div class="d-flex align-items-center">
+                    <button class="btn btn-link text-dark p-0 me-4 fs-4 shadow-none" (click)="toggleSidebar()">
+                        <i class="bi" [class.bi-text-indent-left]="isSidebarOpen" [class.bi-text-indent-right]="!isSidebarOpen"></i>
+                    </button>
+                    <div>
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb mb-0 small text-uppercase tracking-widest" style="font-size: 0.6rem;">
+                                <li class="breadcrumb-item"><a routerLink="/admin" class="text-muted text-decoration-none">Hệ thống</a></li>
+                                <li class="breadcrumb-item active fw-bold text-gold" aria-current="page">{{ activePageName }}</li>
+                            </ol>
+                        </nav>
+                        <h4 class="mb-0 fw-bold fs-5 text-dark tracking-tight">{{ activePageName }}</h4>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center gap-3">
+                    <div class="d-none d-md-block text-end">
+                        <p class="mb-0 fw-bold text-dark small">{{ user?.fullName }}</p>
+                        <p class="mb-0 text-muted small" style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.5px;">Quản trị viên</p>
+                    </div>
+                    <div class="avatar-box bg-black text-white d-flex align-items-center justify-content-center rounded-circle shadow-sm" 
+                         style="width: 40px; height: 40px; font-weight: 700; font-size: 14px;">
+                        {{ (user?.fullName || 'A').charAt(0) }}
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Page Scrollable Area -->
+        <div class="flex-grow-1 p-4 p-lg-5 overflow-auto bg-light bg-opacity-25">
+            <div class="container-fluid px-0">
+                <router-outlet (activate)="onActivate($event)"></router-outlet>
+            </div>
+        </div>
+    </main>
+</div>
+
+<style>
+    .h-75px { height: 75px; }
+    .admin-sidebar {
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        position: sticky;
+        top: 0;
+        background-color: #ffffff !important;
+    }
+    .nav-link {
+        color: #555;
+        font-size: 0.8rem;
+        transition: all 0.2s ease;
+    }
+    .nav-link i {
+        color: #999;
+        transition: color 0.2s ease;
+    }
+    .nav-link:hover {
+        background-color: #f8f9fa;
+        color: #000;
+    }
+    .nav-link:hover i {
+        color: #c5a059;
+    }
+    .nav-link.active {
+        background-color: rgba(197, 160, 89, 0.1);
+        color: #c5a059 !important;
+        border-right: 3px solid #c5a059;
+    }
+    .nav-link.active i {
+        color: #c5a059 !important;
+    }
+    .nav-label {
+        color: #adb5bd !important;
+        font-weight: 700;
+    }
+    .letter-spacing-1 { letter-spacing: 1px; }
+    .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.05); border-radius: 10px; }
+</style>
+

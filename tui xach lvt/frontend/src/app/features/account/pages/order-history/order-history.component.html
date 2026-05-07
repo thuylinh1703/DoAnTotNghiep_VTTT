@@ -1,0 +1,137 @@
+<div class="bg-white pt-5">
+    <div class="container py-5">
+        <div class="row g-5">
+            <!-- Sidebar -->
+            <aside class="col-lg-3">
+                <div class="sticky-top" style="top: 100px;">
+                    <div class="card border-0 bg-light p-4 mb-4 text-center rounded-0">
+                        <div *ngIf="user" class="mb-3">
+                            <div class="bg-dark text-white rounded-circle d-inline-flex align-items-center justify-content-center display-font fs-3 mb-3 mx-auto shadow-sm" style="width: 80px; height: 80px;">
+                                {{ user.fullName.charAt(0) }}
+                            </div>
+                            <h3 class="display-font fs-5 mb-1 text-dark">{{ user.fullName }}</h3>
+                            <p class="text-muted small text-uppercase tracking-widest mb-0" style="font-size: 0.6rem;">THÀNH VIÊN LVT HERITAGE</p>
+                        </div>
+                    </div>
+
+                    <div class="list-group list-group-flush border shadow-sm rounded-0">
+                        <a routerLink="/account/profile" routerLinkActive="active"
+                           class="list-group-item list-group-item-action border-0 py-3 d-flex align-items-center gap-3 text-uppercase letter-spacing-wide small fw-bold"
+                           [routerLinkActiveOptions]="{exact: true}">
+                            <i class="bi bi-person fs-5"></i> Thông tin tài khoản
+                        </a>
+                        <a routerLink="/account/orders" routerLinkActive="active"
+                           class="list-group-item list-group-item-action border-0 py-3 d-flex align-items-center gap-3 text-uppercase letter-spacing-wide small fw-bold">
+                            <i class="bi bi-bag-check fs-5"></i> Lịch sử đơn hàng
+                        </a>
+                        <button (click)="logout()"
+                                class="list-group-item list-group-item-action border-0 py-3 d-flex align-items-center gap-3 text-danger text-uppercase letter-spacing-wide small fw-bold">
+                            <i class="bi bi-box-arrow-right fs-5"></i> Đăng xuất
+                        </button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <div class="col-lg-9">
+                <div class="ps-lg-4">
+                    <div class="mb-5 pb-2 border-bottom">
+                        <h1 class="display-font fs-2 mb-2">Đơn Hàng Của Tôi</h1>
+                        <p class="text-muted mb-0">Theo dõi trạng thái và lịch sử mua sắm của bạn.</p>
+                    </div>
+
+                    <div *ngIf="loading" class="d-flex justify-content-center py-5">
+                        <div class="spinner-border text-gold" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div *ngIf="!loading && orders.length === 0" class="card border-0 bg-light p-5 text-center rounded-0 shadow-sm">
+                        <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center mb-4 mx-auto shadow-sm" style="width: 100px; height: 100px;">
+                            <i class="bi bi-bag-x display-4 text-muted opacity-50"></i>
+                        </div>
+                        <h3 class="display-font fs-4">Chưa có đơn hàng nào</h3>
+                        <p class="text-muted mb-4">Bạn chưa thực hiện giao dịch nào với chúng tôi.</p>
+                        <a routerLink="/products" class="btn btn-dark rounded-0 px-5 py-3 text-uppercase letter-spacing-wide fw-bold shadow-sm">
+                            KHÁM PHÁ NGAY
+                        </a>
+                    </div>
+
+                    <!-- Orders List -->
+                    <div class="d-flex flex-column gap-4" *ngIf="!loading && orders.length > 0">
+                        <div *ngFor="let order of orders" class="card border-0 shadow-sm rounded-0 overflow-hidden">
+                            <div class="card-header bg-light border-0 py-3 px-4 d-flex flex-wrap align-items-center justify-content-between gap-3">
+                                <div class="d-flex align-items-center gap-3">
+                                    <span class="text-muted small text-uppercase tracking-widest fw-bold">Mã đơn:</span>
+                                    <span class="fw-bold text-dark">#{{ order.orderCode }}</span>
+                                    <span class="text-muted opacity-50 mx-1">|</span>
+                                    <span class="text-muted small">{{ order.createdAt | date:'dd/MM/yyyy' }}</span>
+                                </div>
+                                <div class="d-flex align-items-center gap-3">
+                                    <span class="badge rounded-pill px-3 py-2 text-uppercase letter-spacing-wide" 
+                                          [ngClass]="getStatusClass(order.status)" style="font-size: 0.65rem;">
+                                        {{ getStatusVietnamese(order.status) }}
+                                    </span>
+                                    <a [routerLink]="['/account/orders', order.orderCode]" class="btn btn-link text-dark text-decoration-none small p-0 fw-bold border-bottom border-dark">
+                                        CHI TIẾT <i class="bi bi-chevron-right ms-1"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            <div class="card-body p-4" *ngIf="order.items && order.items.length > 0">
+                                <div class="row align-items-center g-4">
+                                    <div class="col-md-8">
+                                        <div class="d-flex align-items-center gap-4">
+                                            <div class="flex-shrink-0 bg-light border p-2" style="width: 80px; height: 80px;">
+                                                <i class="bi bi-box-seam fs-2 text-muted opacity-50 d-flex h-100 align-items-center justify-content-center"></i>
+                                            </div>
+                                            <div class="flex-grow-1 min-w-0">
+                                                <h6 class="display-font fs-6 text-truncate mb-1">{{ order.items[0].productName }}</h6>
+                                                <p class="text-muted small mb-1" *ngIf="order.items.length > 1">
+                                                    và {{ order.items.length - 1 }} sản phẩm khác trong đơn hàng
+                                                </p>
+                                                <p class="text-muted small mb-0">Số lượng: {{ order.items[0].quantity }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 text-md-end">
+                                        <p class="text-muted small text-uppercase tracking-widest mb-1" style="font-size: 0.65rem;">Tổng số tiền</p>
+                                        <p class="fs-4 fw-bold text-dark mb-0">
+                                            {{ (order.finalAmount !== undefined ? order.finalAmount : (order.totalAmount - (order.discountAmount || 0))) | number:'1.0-0' }}&#8363;
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .list-group-item.active {
+        background-color: var(--lvt-bg-dark);
+        color: var(--lvt-accent);
+        border-color: var(--lvt-bg-dark);
+    }
+    .list-group-item {
+        color: #6c757d;
+        background-color: #fff;
+    }
+    .list-group-item:hover:not(.active) {
+        background-color: #f8f9fa;
+        color: #111;
+    }
+    .letter-spacing-wide { letter-spacing: 1.5px; }
+    
+    /* Order Status Badge Classes */
+    .badge.bg-pending { background-color: #ffc107 !important; color: #000; }
+    .badge.bg-confirmed { background-color: #0dcaf0 !important; color: #fff; }
+    .badge.bg-shipping { background-color: #0d6efd !important; color: #fff; }
+    .badge.bg-completed { background-color: #198754 !important; color: #fff; }
+    .badge.bg-cancelled { background-color: #dc3545 !important; color: #fff; }
+</style>
+

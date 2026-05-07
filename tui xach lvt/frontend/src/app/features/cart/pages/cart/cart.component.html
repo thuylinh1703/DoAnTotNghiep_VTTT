@@ -1,0 +1,95 @@
+<div class="bg-white pt-5">
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h1 class="display-font fs-1 mb-2">Giỏ Hàng</h1>
+            <p class="text-muted letter-spacing-wide text-uppercase" style="font-size: 0.75rem;">
+                Xem lại các món đồ quý giá của bạn
+            </p>
+        </div>
+
+        <div class="row g-5 mt-2" *ngIf="cart && cart.items && cart.items.length > 0; else emptyCart">
+            <!-- Items List -->
+            <div class="col-lg-8">
+                <div class="d-none d-sm-grid grid-cols-12 gap-4 pb-3 border-bottom text-uppercase tracking-widest text-muted fw-bold" style="font-size: 0.65rem; display: grid;">
+                    <div style="grid-column: span 5;">Sản phẩm</div>
+                    <div class="text-center" style="grid-column: span 2;">Đơn giá</div>
+                    <div class="text-center" style="grid-column: span 2;">Số lượng</div>
+                    <div class="text-end pe-4" style="grid-column: span 3;">Tổng cộng</div>
+                </div>
+
+                <div class="cart-items-container">
+                    <app-cart-item *ngFor="let item of cart.items"
+                        [item]="item"
+                        [stock]="item.stock ?? null"
+                        (remove)="removeItem($event)"
+                        (updateQuantity)="updateQuantity($event)">
+                    </app-cart-item>
+                </div>
+
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-5 gap-3">
+                    <a routerLink="/products" class="btn btn-outline-dark rounded-0 px-4 py-2 text-uppercase letter-spacing-wide fw-bold" style="font-size: 0.75rem;">
+                        <i class="bi bi-arrow-left me-2"></i> Tiếp tục mua hàng
+                    </a>
+                    <button (click)="clearCart()" class="btn btn-link text-danger text-decoration-none small p-0 fw-bold">
+                        <i class="bi bi-trash me-1"></i> XÓA TOÀN BỘ GIỎ HÀNG
+                    </button>
+                </div>
+            </div>
+
+            <!-- Summary Sidebar -->
+            <aside class="col-lg-4">
+                <div class="card border-0 bg-light p-4 p-md-5 rounded-0 sticky-top" style="top: 100px;">
+                    <h2 class="display-font fs-4 mb-4 pb-2 border-bottom">Tóm tắt</h2>
+
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted small text-uppercase tracking-widest">Tạm tính</span>
+                            <span class="fw-bold">{{ cart.totalAmount | number:'1.0-0' }}&#8363;</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted small text-uppercase tracking-widest">Giao hàng</span>
+                            <span class="text-success small fw-bold">MIỄN PHÍ</span>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-top mb-5">
+                        <div class="d-flex justify-content-between align-items-baseline mb-1">
+                            <span class="display-font fs-5">Tổng cộng</span>
+                            <span class="fs-3 fw-bold text-dark">{{ cart.totalAmount | number:'1.0-0' }}&#8363;</span>
+                        </div>
+                        <p class="text-muted text-end mb-0" style="font-size: 0.7rem;">(Giá đã bao gồm thuế VAT)</p>
+                    </div>
+
+                    <a routerLink="/checkout" class="btn btn-dark w-100 py-3 rounded-0 text-uppercase letter-spacing-wide fw-bold shadow-sm mb-4">
+                        TIẾN HÀNH THANH TOÁN
+                    </a>
+                    
+                    <div class="mt-4">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <i class="bi bi-shield-lock fs-4"></i>
+                            <span class="small text-muted">Thanh toán bảo mật SSL 256-bit</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-3">
+                            <i class="bi bi-arrow-counterclockwise fs-4"></i>
+                            <span class="small text-muted">Đổi trả dễ dàng trong 30 ngày</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+
+        <ng-template #emptyCart>
+            <div class="py-5 my-5 text-center">
+                <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 120px; height: 120px;">
+                    <i class="bi bi-cart-x display-3 text-muted opacity-50"></i>
+                </div>
+                <h2 class="display-font fs-2">Giỏ hàng đang trống</h2>
+                <p class="text-muted mb-5">Có vẻ như bạn chưa chọn được món đồ ưng ý nào.<br>Khám phá bộ sưu tập mới nhất của chúng tôi ngay nhé!</p>
+                <a routerLink="/products" class="btn btn-dark rounded-0 px-5 py-3 text-uppercase letter-spacing-wide fw-bold shadow-sm">
+                    KHÁM PHÁ NGAY
+                </a>
+            </div>
+        </ng-template>
+    </div>
+</div>
+

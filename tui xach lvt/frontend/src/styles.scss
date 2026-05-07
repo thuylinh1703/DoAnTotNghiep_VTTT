@@ -1,0 +1,210 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import "bootstrap-icons/font/bootstrap-icons.css";
+
+/* ============================================================================
+   LVT Shop - Luxury Design Tokens (Bootstrap 5 Integrated)
+   ============================================================================ */
+:root {
+  --lvt-primary: #111111;
+  --lvt-accent: #c5a059;
+  --lvt-accent-hover: #b38f4d;
+  --lvt-text: #333333;
+  --lvt-text-muted: #6c757d;
+  --lvt-bg: #ffffff;
+  --lvt-bg-secondary: #f9f9f9;
+  --lvt-glass: rgba(255, 255, 255, 0.8);
+  --lvt-border: #eeeeee;
+  
+  --font-heading: 'Playfair Display', serif;
+  --font-body: 'Inter', sans-serif;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--lvt-text);
+  background-color: var(--lvt-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6, .display-font {
+  font-family: var(--font-heading);
+  color: var(--lvt-primary);
+  font-weight: 700;
+}
+
+/* ---------- Bootstrap Overrides ---------- */
+
+.btn-primary {
+  background-color: var(--lvt-primary) !important;
+  border-color: var(--lvt-primary) !important;
+  color: #ffffff !important;
+  border-radius: 4px; /* Slightly rounded for modern luxury */
+  padding: 0.75rem 2rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.btn-primary:hover {
+  background-color: #000000 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* Specific button for 'Add' actions in Admin */
+.btn-add-luxury {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border: 1px solid #c5a059 !important; /* Gold border to make it pop */
+  border-radius: 4px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s;
+}
+
+.btn-add-luxury:hover {
+  background-color: #c5a059 !important;
+  border-color: #c5a059 !important;
+  color: #000000 !important;
+  transform: scale(1.02);
+}
+
+.btn-outline-primary {
+  color: var(--lvt-primary) !important;
+  border-color: var(--lvt-primary) !important;
+  background-color: transparent !important;
+  border-radius: 4px;
+  padding: 0.75rem 2rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--lvt-primary);
+  border-color: var(--lvt-primary);
+}
+
+.btn-accent {
+  background-color: var(--lvt-accent);
+  color: white;
+  border-radius: 0;
+  padding: 0.75rem 2rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.btn-accent:hover {
+  background-color: var(--lvt-accent-hover);
+  color: white;
+}
+
+/* ---------- Custom Components ---------- */
+
+.nav-glass {
+  background: var(--lvt-glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.luxury-card {
+  border: none;
+  border-radius: 0;
+  background: var(--lvt-bg);
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  overflow: hidden;
+}
+
+.luxury-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+}
+
+.luxury-card .card-img-top {
+  border-radius: 0;
+  transition: transform 0.8s ease;
+}
+
+.luxury-card:hover .card-img-top {
+  transform: scale(1.05);
+}
+
+.section-title {
+  position: relative;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 2px;
+  background-color: var(--lvt-accent);
+}
+
+.badge-luxury {
+  background-color: var(--lvt-accent);
+  color: white;
+  border-radius: 0;
+  padding: 0.5em 1em;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+/* ---------- Form Overrides ---------- */
+
+.form-control {
+  border-radius: 0;
+  border: 1px solid #e1e1e1;
+  padding: 0.75rem 1rem;
+}
+
+.form-control:focus {
+  border-color: var(--lvt-primary);
+  box-shadow: none;
+}
+
+/* ---------- Utilities ---------- */
+
+.text-gold { color: var(--lvt-accent); }
+.bg-deep-charcoal { background-color: var(--lvt-primary); }
+.bg-luxury-white { background-color: var(--lvt-bg-secondary); }
+
+.letter-spacing-wide { letter-spacing: 0.2em; }
+
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #f1f1f1; }
+::-webkit-scrollbar-thumb { background: #888; }
+::-webkit-scrollbar-thumb:hover { background: #555; }
+
+
+.floating-support-btn {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: support-pulse 2.5s infinite;
+}
+.floating-support-btn:hover {
+    transform: scale(1.15) rotate(5deg);
+    box-shadow: 0 15px 30px rgba(197, 160, 89, 0.4) !important;
+}
+@keyframes support-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.4); }
+    70% { box-shadow: 0 0 0 15px rgba(197, 160, 89, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(197, 160, 89, 0); }
+}

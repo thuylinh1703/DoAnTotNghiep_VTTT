@@ -1,0 +1,194 @@
+<div class="space-y-8">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+            <h1 class="text-section text-[#1d1d1f]">Quản lý sản phẩm</h1>
+            <p class="text-[14px] tracking-[-0.224px] text-[rgba(0,0,0,0.56)] mt-2">
+                Tổng cộng <span class="text-[#1d1d1f] font-semibold">{{ totalElements }}</span> sản phẩm trong hệ thống.
+            </p>
+        </div>
+        <button (click)="openAddModal()" class="btn-add-luxury h-10 px-5 inline-flex items-center gap-2 text-[14px] tracking-[-0.224px]">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            Thêm sản phẩm
+        </button>
+    </div>
+
+    <!-- Table Card -->
+    <div class="card-apple overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-[#f5f5f7] border-b border-[#d2d2d7]">
+                        <th class="px-6 py-3 text-[10px] uppercase tracking-[0.1em] text-[rgba(0,0,0,0.56)] font-medium">Sản phẩm</th>
+                        <th class="px-6 py-3 text-[10px] uppercase tracking-[0.1em] text-[rgba(0,0,0,0.56)] font-medium">Danh mục</th>
+                        <th class="px-6 py-3 text-[10px] uppercase tracking-[0.1em] text-[rgba(0,0,0,0.56)] font-medium">Giá</th>
+                        <th class="px-6 py-3 text-[10px] uppercase tracking-[0.1em] text-[rgba(0,0,0,0.56)] font-medium">Kho</th>
+                        <th class="px-6 py-3 text-[10px] uppercase tracking-[0.1em] text-[rgba(0,0,0,0.56)] font-medium text-right">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-[#d2d2d7]">
+                    <tr *ngFor="let product of products" class="hover:bg-[#f5f5f7]/50 transition-colors group">
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-lg bg-[#f5f5f7] flex-shrink-0 overflow-hidden flex items-center justify-center">
+                                    <img *ngIf="product.primaryImage" [src]="getImageUrl(product.primaryImage)" class="w-full h-full object-cover">
+                                    <svg *ngIf="!product.primaryImage" class="w-5 h-5 text-[#d2d2d7]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-[14px] font-semibold tracking-[-0.224px] text-[#1d1d1f] truncate max-w-[220px]">{{ product.name }}</p>
+                                    <div class="flex items-center gap-1.5 mt-1">
+                                        <span class="text-[10px] tracking-[-0.08px] px-1.5 py-0.5 rounded bg-[#f5f5f7] text-[rgba(0,0,0,0.56)]">{{ product.brand || 'LVT Shop' }}</span>
+                                        <span *ngIf="product.isNew" class="text-[10px] tracking-[-0.08px] px-1.5 py-0.5 rounded bg-[#e9f7ef] text-[#2a7f3f]">Mới</span>
+                                        <span *ngIf="product.isFeatured" class="text-[10px] tracking-[-0.08px] px-1.5 py-0.5 rounded bg-[#e6f0ff] text-[#0066cc]">Nổi bật</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="text-[12px] tracking-[-0.12px] text-[rgba(0,0,0,0.8)]">
+                                {{ product.categoryName || 'Chưa phân loại' }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-[14px] font-semibold tracking-[-0.224px] text-[#1d1d1f]">
+                            {{ product.price | number:'1.0-0' }}&#8363;
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-2">
+                                <span class="w-1.5 h-1.5 rounded-full" [ngClass]="product.quantity > 10 ? 'bg-[#30d158]' : 'bg-[#ff3b30]'"></span>
+                                <span class="text-[12px] tracking-[-0.12px] text-[rgba(0,0,0,0.8)]">{{ product.quantity }}</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <div class="flex justify-end gap-2">
+                                <button (click)="openEditModal(product)"
+                                    class="w-8 h-8 flex items-center justify-center rounded-lg text-[#1d1d1f] hover:bg-[#f5f5f7] transition-colors"
+                                    aria-label="Sửa">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                    </svg>
+                                </button>
+                                <button (click)="deleteProduct(product.id)"
+                                    class="w-8 h-8 flex items-center justify-center rounded-lg text-[#ff3b30] hover:bg-[#fff1f0] transition-colors"
+                                    aria-label="Xóa">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="p-6 border-t border-[#d2d2d7] flex justify-center bg-white" *ngIf="totalPages > 1">
+            <nav class="flex gap-2">
+                <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 0"
+                    class="w-9 h-9 flex items-center justify-center rounded-full text-[#1d1d1f] hover:bg-[#f5f5f7] transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                </button>
+                <button *ngFor="let page of getPages()" (click)="onPageChange(page)"
+                    class="w-9 h-9 flex items-center justify-center rounded-full text-[13px] tracking-[-0.208px] transition-colors"
+                    [ngClass]="currentPage === page ? 'bg-[#1d1d1f] text-white' : 'text-[#1d1d1f] hover:bg-[#f5f5f7]'">
+                    {{ page + 1 }}
+                </button>
+                <button (click)="onPageChange(currentPage + 1)" [disabled]="currentPage === totalPages - 1"
+                    class="w-9 h-9 flex items-center justify-center rounded-full text-[#1d1d1f] hover:bg-[#f5f5f7] transition-colors disabled:opacity-30 disabled:cursor-not-allowed">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<!-- Add/Edit Product Modal -->
+<div *ngIf="showModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div class="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
+         style="box-shadow: rgba(0, 0, 0, 0.22) 3px 5px 30px 0px;">
+        <div class="p-8">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-card-title text-[#1d1d1f]">{{ editMode ? 'Cập nhật sản phẩm' : 'Thêm sản phẩm mới' }}</h2>
+                <button (click)="closeModal()" class="w-8 h-8 rounded-full flex items-center justify-center text-[rgba(0,0,0,0.56)] hover:bg-[#f5f5f7] transition-colors" aria-label="Đóng">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-[12px] tracking-[-0.12px] text-[rgba(0,0,0,0.56)] mb-2">Tên sản phẩm *</label>
+                        <input type="text" formControlName="name" class="input-plain" placeholder="Nhập tên sản phẩm">
+                    </div>
+                    <div>
+                        <label class="block text-[12px] tracking-[-0.12px] text-[rgba(0,0,0,0.56)] mb-2">Thương hiệu</label>
+                        <input type="text" formControlName="brand" class="input-plain" placeholder="Nhập thương hiệu">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-[12px] tracking-[-0.12px] text-[rgba(0,0,0,0.56)] mb-2">Danh mục *</label>
+                        <select formControlName="categoryId" class="input-plain">
+                            <option value="">Chọn danh mục</option>
+                            <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[12px] tracking-[-0.12px] text-[rgba(0,0,0,0.56)] mb-2">Số lượng trong kho *</label>
+                        <input type="number" formControlName="quantity" class="input-plain">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-[12px] tracking-[-0.12px] text-[rgba(0,0,0,0.56)] mb-2">Giá bán *</label>
+                        <input type="number" formControlName="price" class="input-plain">
+                    </div>
+                    <div>
+                        <label class="block text-[12px] tracking-[-0.12px] text-[rgba(0,0,0,0.56)] mb-2">Giá khuyến mãi</label>
+                        <input type="number" formControlName="discountPrice" class="input-plain">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-[12px] tracking-[-0.12px] text-[rgba(0,0,0,0.56)] mb-2">Mô tả sản phẩm *</label>
+                    <textarea formControlName="description" class="input-plain min-h-[100px]" placeholder="Nhập mô tả…"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-[12px] tracking-[-0.12px] text-[rgba(0,0,0,0.56)] mb-2">Hình ảnh</label>
+                    <input type="file" multiple (change)="onFileChange($event)" class="block w-full text-[12px] tracking-[-0.12px] text-[rgba(0,0,0,0.56)] file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-[12px] file:bg-[#f5f5f7] file:text-[#1d1d1f] hover:file:bg-[#ededf2] file:cursor-pointer">
+                </div>
+
+                <div class="flex gap-6 pt-2">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" formControlName="isNew" class="w-4 h-4 accent-[#0071e3]">
+                        <span class="text-[14px] tracking-[-0.224px] text-[#1d1d1f]">Sản phẩm mới</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" formControlName="isFeatured" class="w-4 h-4 accent-[#0071e3]">
+                        <span class="text-[14px] tracking-[-0.224px] text-[#1d1d1f]">Sản phẩm nổi bật</span>
+                    </label>
+                </div>
+
+                <div class="pt-6 border-t border-[#d2d2d7] flex gap-3">
+                    <button type="button" (click)="closeModal()" class="btn-outline flex-1 h-10 text-[14px] focus-ring">Hủy bỏ</button>
+                    <button type="submit" [disabled]="loading || productForm.invalid"
+                        class="btn-primary flex-1 h-10 text-[14px] disabled:opacity-50 disabled:cursor-not-allowed focus-ring">
+                        {{ loading ? 'Đang lưu…' : (editMode ? 'Cập nhật' : 'Lưu sản phẩm') }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

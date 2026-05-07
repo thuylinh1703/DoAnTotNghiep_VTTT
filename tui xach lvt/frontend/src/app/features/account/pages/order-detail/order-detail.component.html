@@ -1,0 +1,216 @@
+<div class="bg-white pt-5">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <nav aria-label="breadcrumb" class="mb-4">
+                    <ol class="breadcrumb bg-transparent p-0 small text-uppercase tracking-widest">
+                        <li class="breadcrumb-item"><a routerLink="/account/orders" class="text-muted text-decoration-none"><i class="bi bi-arrow-left me-1"></i> Lịch sử đơn hàng</a></li>
+                        <li class="breadcrumb-item active text-dark fw-bold" aria-current="page">Chi tiết #{{ order?.orderCode }}</li>
+                    </ol>
+                </nav>
+
+                <div *ngIf="loading" class="d-flex justify-content-center py-5">
+                    <div class="spinner-border text-gold" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+
+                <div class="card border-0 shadow-sm rounded-0 overflow-hidden" *ngIf="order && !loading">
+                    <!-- Header -->
+                    <div class="card-header bg-dark text-white p-4 p-md-5">
+                        <div class="row align-items-center g-4">
+                            <div class="col-md-8">
+                                <h1 class="display-font fs-2 mb-2">Đơn Hàng #{{ order.orderCode }}</h1>
+                                <p class="text-muted small mb-0 text-uppercase tracking-widest" style="font-size: 0.7rem;">
+                                    Đặt ngày {{ order.createdAt | date:'dd/MM/yyyy' }} &bull; {{ order.createdAt | date:'HH:mm' }}
+                                </p>
+                            </div>
+                            <div class="col-md-4 text-md-end">
+                                <span class="badge rounded-pill px-4 py-2 text-uppercase letter-spacing-wide fs-6" 
+                                      [ngClass]="getStatusClass(order.status)">
+                                    {{ getStatusVietnamese(order.status) }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Info Grid -->
+                    <div class="card-body p-4 p-md-5">
+                        <div class="row g-5 mb-5 pb-4 border-bottom">
+                            <div class="col-md-6">
+                                <h3 class="small text-uppercase tracking-widest text-muted fw-bold mb-4" style="font-size: 0.7rem;">
+                                    <i class="bi bi-geo-alt me-2"></i> Thông tin nhận hàng
+                                </h3>
+                                <p class="fw-bold text-dark mb-1 fs-5">{{ order.receiverName }}</p>
+                                <p class="text-muted mb-1">{{ order.receiverPhone }}</p>
+                                <p class="text-muted mb-0" style="line-height: 1.6;">{{ order.receiverAddress }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h3 class="small text-uppercase tracking-widest text-muted fw-bold mb-4" style="font-size: 0.7rem;">
+                                    <i class="bi bi-credit-card me-2"></i> Hình thức thanh toán
+                                </h3>
+                                <p class="fw-bold text-dark mb-1">
+                                    {{ order.paymentMethod === 'COD' ? 'Thanh toán khi nhận hàng (COD)' :
+                                       order.paymentMethod === 'VNPAY' ? 'Ví điện tử VNPAY' : 'Chuyển khoản ngân hàng' }}
+                                </p>
+                                <div class="d-flex align-items-center gap-2 mt-2">
+                                    <span class="badge rounded-0" [ngClass]="(order.paymentMethod === 'VNPAY' && order.status !== 'PENDING' && order.status !== 'CANCELLED') || order.status === 'COMPLETED' ? 'bg-success' : 'bg-secondary'">
+                                        {{ (order.paymentMethod === 'VNPAY' && order.status !== 'PENDING' && order.status !== 'CANCELLED') || order.status === 'COMPLETED' ? 'Đã Thanh Toán' : 'Chờ Thanh Toán' }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Items Table -->
+                        <h3 class="small text-uppercase tracking-widest text-muted fw-bold mb-4" style="font-size: 0.7rem;">Sản phẩm trong đơn</h3>
+                        <div class="d-flex flex-column gap-3 mb-5">
+                            <div *ngFor="let item of order.items" 
+                                 class="row g-3 align-items-center p-3 border-bottom bg-light bg-opacity-25 hover-bg-light transition-all rounded-0">
+                                <div class="col-auto">
+                                    <div class="bg-white border p-1" style="width: 70px; height: 90px;">
+                                        <img *ngIf="item.productImageUrl" [src]="getImageUrl(item.productImageUrl)" class="w-100 h-100 object-cover">
+                                        <i *ngIf="!item.productImageUrl" class="bi bi-box-seam fs-2 text-muted opacity-20 d-flex h-100 align-items-center justify-content-center"></i>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <h6 class="display-font fs-6 mb-1">{{ item.productName }}</h6>
+                                    <p class="text-muted small mb-0">Đơn giá: {{ item.price | number:'1.0-0' }}&#8363;</p>
+                                    <p class="text-muted small mb-0">Số lượng: {{ item.quantity }}</p>
+                                </div>
+                                <div class="col-auto text-end">
+                                    <p class="fw-bold text-dark mb-2">{{ item.subtotal | number:'1.0-0' }}&#8363;</p>
+                                    <button *ngIf="order.status === 'COMPLETED'" (click)="openReviewModal(item)" [disabled]="item.isReviewed"
+                                            class="btn btn-sm rounded-0 px-3 py-2 text-uppercase letter-spacing-wide fw-bold shadow-sm"
+                                            [ngClass]="item.isReviewed ? 'btn-light border text-muted' : 'btn-dark'">
+                                        {{ item.isReviewed ? 'ĐÃ ĐÁNH GIÁ' : 'VIẾT ĐÁNH GIÁ' }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Totals -->
+                        <div class="row justify-content-end">
+                            <div class="col-md-5">
+                                <div class="d-flex flex-column gap-3">
+                                    <div class="d-flex justify-content-between text-muted">
+                                        <span class="small text-uppercase tracking-widest">Tiền hàng:</span>
+                                        <span class="fw-bold">{{ order.totalAmount | number:'1.0-0' }}&#8363;</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between text-muted">
+                                        <span class="small text-uppercase tracking-widest">Phí giao hàng:</span>
+                                        <span class="text-success small fw-bold">MIỄN PHÍ</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between text-danger" *ngIf="order.discountAmount > 0">
+                                        <span class="small text-uppercase tracking-widest">Giảm giá ({{ order.couponCode }}):</span>
+                                        <span class="fw-bold">-{{ order.discountAmount | number:'1.0-0' }}&#8363;</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                                        <span class="display-font fs-5 text-dark">Thành tiền:</span>
+                                        <span class="fs-2 fw-bold text-dark">
+                                            {{ (order.finalAmount !== undefined ? order.finalAmount : (order.totalAmount - (order.discountAmount || 0))) | number:'1.0-0' }}&#8363;
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="mt-5 d-flex flex-column gap-3">
+                                    <button *ngIf="order.status === 'PENDING'" (click)="cancelOrder()"
+                                            class="btn btn-outline-danger w-100 py-3 rounded-0 text-uppercase letter-spacing-wide fw-bold">
+                                        Hủy Đơn Hàng
+                                    </button>
+                                    <button *ngIf="order.status === 'SHIPPING' || order.status === 'CONFIRMED'" (click)="confirmReceived()"
+                                            class="btn btn-dark w-100 py-3 rounded-0 text-uppercase letter-spacing-wide fw-bold shadow-sm">
+                                        Xác Nhận Đã Nhận Hàng
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Review Modal (Bootstrap Style Overlay) -->
+<div *ngIf="showReviewModal" class="modal-backdrop fade show"></div>
+<div *ngIf="showReviewModal" class="modal fade show d-block" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-0 shadow-lg overflow-hidden">
+            <div class="modal-header bg-dark text-white border-0 py-4">
+                <h5 class="modal-title display-font fs-4">Đánh giá sản phẩm</h5>
+                <button type="button" class="btn-close btn-close-white" (click)="closeReviewModal()"></button>
+            </div>
+            <div class="modal-body p-4 p-md-5">
+                <div class="text-center mb-4 pb-2">
+                    <h6 class="display-font fs-6 mb-1">{{ selectedItemForReview?.productName }}</h6>
+                    <p class="text-muted small text-uppercase tracking-widest mb-4">Bạn cảm nhận thế nào về sản phẩm?</p>
+                    
+                    <div class="d-flex justify-content-center gap-2">
+                        <button *ngFor="let star of [1,2,3,4,5]" (click)="reviewData.rating = star"
+                                class="btn p-0 border-0 transition-all scale-hover"
+                                [ngClass]="{'scale-up': reviewData.rating === star}">
+                            <i class="bi fs-1" 
+                               [ngClass]="reviewData.rating >= star ? 'bi-star-fill text-gold' : 'bi-star text-muted opacity-30'"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label small text-uppercase tracking-widest text-muted fw-bold mb-2">Lời bình luận</label>
+                    <textarea [(ngModel)]="reviewData.comment" class="form-control border-0 bg-light rounded-0 py-3" 
+                              rows="4" placeholder="Hãy để lại cảm nhận của bạn về chất lượng sản phẩm và dịch vụ..."></textarea>
+                </div>
+
+                <div class="mb-5">
+                    <label class="form-label small text-uppercase tracking-widest text-muted fw-bold mb-2">Hình ảnh thực tế</label>
+                    <div class="d-flex flex-wrap gap-2">
+                        <div *ngFor="let img of reviewData.images; let i = index" class="position-relative" style="width: 60px; height: 60px;">
+                            <img [src]="img" class="w-100 h-100 object-cover border">
+                            <button (click)="removeImage(i)" 
+                                    class="btn btn-danger btn-sm rounded-circle position-absolute top-0 end-0 translate-middle p-0" 
+                                    style="width: 20px; height: 20px; font-size: 10px;">
+                                <i class="bi bi-x"></i>
+                            </button>
+                        </div>
+                        <label class="upload-btn d-flex align-items-center justify-content-center border bg-light cursor-pointer" 
+                               style="width: 60px; height: 60px;">
+                            <i class="bi bi-plus fs-3 text-muted"></i>
+                            <input type="file" class="d-none" (change)="onFileChange($event)" multiple accept="image/*">
+                        </label>
+                    </div>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-6">
+                        <button (click)="closeReviewModal()" class="btn btn-outline-dark w-100 py-3 rounded-0 text-uppercase letter-spacing-wide fw-bold" style="font-size: 0.75rem;">
+                            BỎ QUA
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <button (click)="submitReview()" [disabled]="isSubmittingReview || reviewData.rating === 0"
+                                class="btn btn-dark w-100 py-3 rounded-0 text-uppercase letter-spacing-wide fw-bold shadow-sm" style="font-size: 0.75rem;">
+                            {{ isSubmittingReview ? 'ĐANG GỬI...' : 'GỬI ĐÁNH GIÁ' }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .hover-bg-light:hover { background-color: #f8f9fa !important; }
+    .transition-all { transition: all 0.3s ease; }
+    .scale-hover:hover { transform: scale(1.1); }
+    .scale-up { transform: scale(1.2); }
+    .cursor-pointer { cursor: pointer; }
+    .upload-btn:hover { background-color: #e9ecef !important; }
+    
+    /* Order Status Badge Classes */
+    .badge.bg-pending { background-color: #ffc107 !important; color: #000; }
+    .badge.bg-confirmed { background-color: #0dcaf0 !important; color: #fff; }
+    .badge.bg-shipping { background-color: #0d6efd !important; color: #fff; }
+    .badge.bg-completed { background-color: #198754 !important; color: #fff; }
+    .badge.bg-cancelled { background-color: #dc3545 !important; color: #fff; }
+</style>
+

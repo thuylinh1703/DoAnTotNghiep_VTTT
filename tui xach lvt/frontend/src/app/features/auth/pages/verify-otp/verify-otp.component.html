@@ -1,0 +1,45 @@
+<section class="bg-light d-flex align-items-center justify-content-center py-5" style="min-height: 80vh;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5 col-lg-4">
+                <div class="card border-0 shadow-sm p-4 p-md-5 rounded-0 text-center">
+                    <div class="mb-4">
+                        <div class="bg-dark text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 48px; height: 48px; font-size: 20px; font-weight: 700;">L</div>
+                        <h1 class="display-font fs-2 mb-2">Xác Thực</h1>
+                        <p class="text-muted small">Mã OTP đã được gửi đến <br><strong class="text-dark">{{ email }}</strong></p>
+                    </div>
+
+                    <form [formGroup]="verifyForm" (ngSubmit)="onSubmit()" class="text-start">
+                        <div *ngIf="errorMessage" class="alert alert-danger border-0 rounded-0 small mb-4 text-start">
+                            <i class="bi bi-exclamation-triangle me-2"></i> {{ errorMessage }}
+                        </div>
+                        <div *ngIf="successMessage" class="alert alert-success border-0 rounded-0 small mb-4 text-start">
+                            <i class="bi bi-check-circle me-2"></i> {{ successMessage }}
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="otp" class="form-label d-block text-center small text-uppercase tracking-widest text-muted fw-bold mb-3" style="font-size: 0.7rem;">Nhập mã xác thực</label>
+                            <input id="otp" formControlName="otpCode" type="text" maxlength="6" required
+                                   class="form-control form-control-lg border-0 bg-light rounded-0 shadow-none text-center fw-bold letter-spacing-wide py-3" 
+                                   style="font-size: 1.5rem; letter-spacing: 0.5em !important;"
+                                   placeholder="000000">
+                        </div>
+
+                        <button type="submit" [disabled]="verifyForm.invalid || loading"
+                                class="btn btn-primary w-100 py-3 text-uppercase letter-spacing-wide fw-bold shadow-sm mb-4">
+                            {{ loading ? 'Đang xác thực...' : 'Xác thực tài khoản' }}
+                        </button>
+
+                        <div class="text-center">
+                            <button type="button" (click)="resendOtp()" [disabled]="resending" 
+                                    class="btn btn-link text-gold text-decoration-none small fw-bold p-0">
+                                {{ resending ? 'Đang gửi lại...' : 'Gửi lại mã OTP' }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

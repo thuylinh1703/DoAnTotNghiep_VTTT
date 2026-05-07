@@ -1,0 +1,56 @@
+<div class="filter-sidebar bg-white border-end pe-4 h-100">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <h3 class="display-font fs-5 mb-0">Bộ lọc</h3>
+        <button (click)="resetFilters()" class="btn btn-link text-gold text-decoration-none small p-0 fw-bold" style="font-size: 0.75rem;">XÓA TẤT CẢ</button>
+    </div>
+
+    <!-- Danh mục -->
+    <div class="mb-5 pb-4 border-bottom">
+        <h4 class="text-uppercase tracking-widest text-muted fw-bold mb-3" style="font-size: 0.65rem;">Loại túi xách</h4>
+        <div class="d-flex flex-column gap-2">
+            <div class="form-check" *ngFor="let cat of categories">
+                <input class="form-check-input rounded-0 border-secondary shadow-none" type="radio" 
+                       [name]="'category'" [id]="'cat-' + cat.id"
+                       [checked]="selectedCategoryId === cat.id" (change)="onCategoryChange(cat.id)">
+                <label class="form-check-label small text-dark cursor-pointer" [for]="'cat-' + cat.id">
+                    {{cat.name}}
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Thương hiệu -->
+    <div class="mb-5 pb-4 border-bottom">
+        <h4 class="text-uppercase tracking-widest text-muted fw-bold mb-3" style="font-size: 0.65rem;">Thương hiệu</h4>
+        <div class="d-flex flex-column gap-2">
+            <div class="form-check" *ngFor="let brand of brands">
+                <input class="form-check-input rounded-0 border-secondary shadow-none" type="checkbox" 
+                       [id]="'brand-' + brand"
+                       [checked]="selectedBrand === brand" (change)="onBrandChange(brand)">
+                <label class="form-check-label small text-dark cursor-pointer" [for]="'brand-' + brand">
+                    {{brand}}
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Khoảng giá -->
+    <div class="mb-5 pb-4 border-bottom">
+        <h4 class="text-uppercase tracking-widest text-muted fw-bold mb-3" style="font-size: 0.65rem;">Khoảng giá (VNĐ)</h4>
+        <div class="row g-2">
+            <div class="col-6">
+                <input type="number" [(ngModel)]="minPrice" placeholder="Từ"
+                       class="form-control form-control-sm border-0 bg-light rounded-0 shadow-none px-3 py-2" style="font-size: 0.8rem;">
+            </div>
+            <div class="col-6">
+                <input type="number" [(ngModel)]="maxPrice" placeholder="Đến"
+                       class="form-control form-control-sm border-0 bg-light rounded-0 shadow-none px-3 py-2" style="font-size: 0.8rem;">
+            </div>
+        </div>
+    </div>
+
+    <button (click)="applyFilters()" class="btn btn-dark w-100 py-3 rounded-0 text-uppercase letter-spacing-wide fw-bold shadow-sm" style="font-size: 0.75rem;">
+        ÁP DỤNG BỘ LỌC
+    </button>
+</div>
+

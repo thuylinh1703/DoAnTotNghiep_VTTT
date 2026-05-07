@@ -1,0 +1,152 @@
+<div class="bg-white pt-5" *ngIf="cart">
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h1 class="display-font fs-1 mb-2">Thanh Toán</h1>
+            <p class="text-muted letter-spacing-wide text-uppercase" style="font-size: 0.75rem;">
+                Hoàn tất hành trình sở hữu phong cách LVT
+            </p>
+        </div>
+
+        <div class="row g-5 mt-2">
+            <!-- Left Column: Shipping & Payment -->
+            <div class="col-lg-8">
+                <!-- Shipping Info -->
+                <div class="mb-5 pb-2">
+                    <h2 class="display-font fs-4 mb-4 border-bottom pb-2">Thông tin giao hàng</h2>
+                    <form [formGroup]="checkoutForm" class="row g-4">
+                        <div class="col-md-6">
+                            <label class="form-label small text-uppercase tracking-widest text-muted fw-bold" style="font-size: 0.65rem;">
+                                Họ và tên <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" formControlName="fullName" required 
+                                   class="form-control border-0 bg-light rounded-0 shadow-none py-3" 
+                                   placeholder="Nguyễn Văn A">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small text-uppercase tracking-widest text-muted fw-bold" style="font-size: 0.65rem;">
+                                Số điện thoại <span class="text-danger">*</span>
+                            </label>
+                            <input type="tel" formControlName="phone" required 
+                                   class="form-control border-0 bg-light rounded-0 shadow-none py-3" 
+                                   placeholder="0123 456 789">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small text-uppercase tracking-widest text-muted fw-bold" style="font-size: 0.65rem;">
+                                Địa chỉ nhận hàng <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" formControlName="address" required 
+                                   class="form-control border-0 bg-light rounded-0 shadow-none py-3" 
+                                   placeholder="Số nhà, tên đường, phường/xã, quận/huyện...">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small text-uppercase tracking-widest text-muted fw-bold" style="font-size: 0.65rem;">Ghi chú đơn hàng (tuỳ chọn)</label>
+                            <textarea formControlName="note" 
+                                      class="form-control border-0 bg-light rounded-0 shadow-none py-3" 
+                                      style="min-height: 120px;"
+                                      placeholder="Ghi chú về thời gian giao hàng hoặc chỉ dẫn địa điểm..."></textarea>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Payment Methods -->
+                <div class="mb-5">
+                    <h2 class="display-font fs-4 mb-4 border-bottom pb-2">Phương thức thanh toán</h2>
+                    <div class="d-flex flex-column gap-3" [formGroup]="checkoutForm">
+                        <label class="payment-option d-flex align-items-center p-4 border cursor-pointer transition-all" 
+                               [class.active]="checkoutForm.get('paymentMethod')?.value === 'COD'">
+                            <input type="radio" formControlName="paymentMethod" value="COD" class="form-check-input me-3 rounded-circle">
+                            <div class="flex-grow-1">
+                                <span class="d-block fw-bold text-dark mb-1">Thanh toán khi nhận hàng (COD)</span>
+                                <span class="small text-muted">Thanh toán tiền mặt trực tiếp cho nhân viên giao hàng khi nhận sản phẩm.</span>
+                            </div>
+                            <i class="bi bi-cash-stack fs-3 text-muted ms-3"></i>
+                        </label>
+
+                        <label class="payment-option d-flex align-items-center p-4 border cursor-pointer transition-all"
+                               [class.active]="checkoutForm.get('paymentMethod')?.value === 'BANK_TRANSFER'">
+                            <input type="radio" formControlName="paymentMethod" value="BANK_TRANSFER" class="form-check-input me-3 rounded-circle">
+                            <div class="flex-grow-1">
+                                <span class="d-block fw-bold text-dark mb-1">Chuyển khoản ngân hàng</span>
+                                <span class="small text-muted">Hệ thống sẽ hiển thị mã QR và thông tin tài khoản sau khi bạn đặt hàng.</span>
+                            </div>
+                            <i class="bi bi-bank fs-3 text-muted ms-3"></i>
+                        </label>
+
+                        <label class="payment-option d-flex align-items-center p-4 border cursor-pointer transition-all"
+                               [class.active]="checkoutForm.get('paymentMethod')?.value === 'VNPAY'">
+                            <input type="radio" formControlName="paymentMethod" value="VNPAY" class="form-check-input me-3 rounded-circle">
+                            <div class="flex-grow-1">
+                                <span class="d-block fw-bold text-dark mb-1">Ví điện tử VNPAY / Ngân hàng nội địa</span>
+                                <span class="small text-muted">Thanh toán nhanh qua ứng dụng ngân hàng hoặc ví VNPAY.</span>
+                            </div>
+                            <div class="ms-3 d-flex gap-1 align-items-center">
+                                <img src="https://vnpay.vn/s1/statics.vnpay.vn/2023/6/0oxp9v683ay61686556150171.png" style="height: 20px;" alt="VNPAY">
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Summary -->
+            <aside class="col-lg-4">
+                <div class="card border-0 bg-light p-4 p-md-5 rounded-0 sticky-top" style="top: 100px;">
+                    <h2 class="display-font fs-4 mb-4 pb-2 border-bottom">Đơn hàng</h2>
+
+                    <!-- Items List -->
+                    <div class="order-items mb-4 overflow-auto scrollbar-hide" style="max-height: 300px;">
+                        <div class="d-flex gap-3 mb-3 pb-3 border-bottom border-secondary border-opacity-10" *ngFor="let item of cart.items">
+                            <div class="position-relative flex-shrink-0 border bg-white" style="width: 64px; height: 64px;">
+                                <img *ngIf="item.productImage" [src]="getImageUrl(item.productImage)" class="w-100 h-100 object-cover" [alt]="item.productName">
+                                <span class="position-absolute top-0 end-0 translate-middle badge rounded-circle bg-dark" style="font-size: 10px;">{{ item.quantity }}</span>
+                            </div>
+                            <div class="flex-grow-1 min-w-0">
+                                <p class="small fw-bold text-dark text-truncate mb-0">{{ item.productName }}</p>
+                                <p class="text-muted small mb-0" style="font-size: 0.7rem;">{{ item.brandName || 'LVT' }}</p>
+                                <p class="small fw-bold mb-0 text-end">{{ item.totalPrice | number:'1.0-0' }}&#8363;</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Totals -->
+                    <div class="mb-4 pt-2">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted small text-uppercase tracking-widest">Tạm tính</span>
+                            <span class="small fw-bold">{{ cart.totalAmount | number:'1.0-0' }}&#8363;</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted small text-uppercase tracking-widest">Giao hàng</span>
+                            <span class="text-success small fw-bold">MIỄN PHÍ</span>
+                        </div>
+                        <div class="d-flex justify-content-between text-danger mb-2" *ngIf="appliedCoupon">
+                            <span class="small text-uppercase tracking-widest">Giảm giá ({{ appliedCoupon.code }})</span>
+                            <span class="small fw-bold">-{{ appliedCoupon.discountAmount | number:'1.0-0' }}&#8363;</span>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-top mb-5">
+                        <div class="d-flex justify-content-between align-items-baseline mb-1">
+                            <span class="display-font fs-5">Tổng thanh toán</span>
+                            <span class="fs-4 fw-bold text-dark">{{ (appliedCoupon ? cart.totalAmount - appliedCoupon.discountAmount : cart.totalAmount) | number:'1.0-0' }}&#8363;</span>
+                        </div>
+                    </div>
+
+                    <app-coupon-input class="d-block mb-4"></app-coupon-input>
+
+                    <button (click)="onSubmit()" [disabled]="loading || checkoutForm.invalid"
+                        class="btn btn-dark w-100 py-3 rounded-0 text-uppercase letter-spacing-wide fw-bold shadow-sm mb-4">
+                        {{ loading ? 'Đang xử lý...' : 'Xác Nhận Đặt Hàng' }}
+                    </button>
+                    
+                    <p class="text-center text-muted mb-0" style="font-size: 0.7rem; line-height: 1.5;">
+                        Bằng việc nhấn đặt hàng, bạn đồng ý với <br>
+                        <a href="#" class="text-dark fw-bold text-decoration-none border-bottom border-dark">Chính sách mua hàng</a> của chúng tôi.
+                    </p>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+<div class="max-w-[820px] mx-auto px-6 py-32 text-center" *ngIf="!cart && !loading">
+    <h2 class="text-section text-[#1d1d1f]">Giỏ hàng của bạn đang trống</h2>
+    <a routerLink="/products" class="mt-6 btn-primary inline-flex h-10 px-6">Bắt đầu mua sắm</a>
+</div>

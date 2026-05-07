@@ -1,0 +1,356 @@
+# 📚 API Documentation - Túi Xách LVT Backend
+
+> **Base URL**: `http://localhost:8080/api`
+> **Authentication**: JWT Bearer Token
+
+---
+
+## 🔐 1. Authentication (`/api/auth`)
+
+### 1.1 Đăng ký (Gửi OTP qua email)
+```http
+POST /api/auth/register
+Content-Type: application/json
+```
+```json
+{
+  "fullName": "Nguyễn Văn A",
+  "email": "user@example.com",
+  "password": "123456",
+  "phone": "0123456789",
+  "address": "123 Đường ABC, TP.HCM"
+}
+```
+**Response:** `{"success": true, "message": "Đăng ký thành công! Vui lòng kiểm tra email để nhận mã OTP xác nhận."}`
+
+### 1.2 Xác nhận OTP (Kích hoạt tài khoản và nhận JWT)
+```http
+POST /api/auth/verify-otp
+Content-Type: application/json
+```
+```json
+{
+  "email": "user@example.com",
+  "otpCode": "123456"
+}
+```
+
+### 1.3 Gửi lại OTP
+```http
+POST /api/auth/resend-otp
+Content-Type: application/json
+```
+```json
+{
+  "email": "user@example.com"
+}
+```
+
+### 1.4 Đăng nhập
+```http
+POST /api/auth/login
+Content-Type: application/json
+```
+```json
+{
+  "email": "user@example.com",
+  "password": "123456"
+}
+```
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Đăng nhập thành công",
+  "data": {
+    "token": "eyJhbGciOiJIUzI1NiJ9...",
+    "email": "user@example.com",
+    "fullName": "Nguyễn Văn A",
+    "role": "USER"
+  }
+}
+```
+
+### 1.5 Quên mật khẩu
+```http
+POST /api/auth/forgot-password
+```
+```json
+{
+  "email": "user@example.com",
+  "newPassword": "newpass123"
+}
+```
+
+---
+
+## 🏠 2. Trang chủ (`/api/home`)
+
+### 2.1 Lấy dữ liệu trang chủ
+```http
+GET /api/home
+```
+**Response** gồm: banners, categories, featuredProducts, newProducts, discountedProducts
+
+---
+
+## 📦 3. Sản phẩm (`/api/products`)
+
+### 3.1 Danh sách sản phẩm (có lọc & sắp xếp)
+```http
+GET /api/products?categoryId=1&brand=Gucci&minPrice=100000&maxPrice=5000000&keyword=túi&sortBy=price_asc&page=0&size=12
+```
+| Param | Mô tả |
+|-------|--------|
+| `categoryId` | Lọc theo danh mục |
+| `brand` | Lọc theo thương hiệu |
+| `minPrice` | Giá tối thiểu |
+| `maxPrice` | Giá tối đa |
+| `keyword` | Tìm kiếm theo tên |
+| `sortBy` | `newest`, `price_asc`, `price_desc` |
+| `page` | Trang (mặc định 0) |
+| `size` | Số SP/trang (mặc định 12) |
+
+### 3.2 Chi tiết sản phẩm
+```http
+GET /api/products/{id}
+```
+
+### 3.3 Sản phẩm nổi bật
+```http
+GET /api/products/featured
+```
+
+### 3.4 Sản phẩm mới
+```http
+GET /api/products/new?limit=8
+```
+
+### 3.5 Sản phẩm khuyến mãi
+```http
+GET /api/products/discounted
+```
+
+### 3.6 Danh sách thương hiệu
+```http
+GET /api/products/brands
+```
+
+---
+
+## 📂 4. Danh mục (`/api/categories`)
+
+### 4.1 Danh sách danh mục
+```http
+GET /api/categories
+```
+
+### 4.2 Chi tiết danh mục
+```http
+GET /api/categories/{id}
+```
+
+---
+
+## ⭐ 5. Đánh giá (`/api/reviews`)
+
+### 5.1 Xem đánh giá sản phẩm
+```http
+GET /api/reviews/product/{productId}?page=0&size=10
+```
+
+### 5.2 Tạo đánh giá (🔒 Auth required)
+```http
+POST /api/reviews
+Authorization: Bearer {token}
+```
+```json
+{
+  "productId": 1,
+  "rating": 5,
+  "comment": "Sản phẩm rất đẹp!"
+}
+```
+
+---
+
+## 🛒 6. Giỏ hàng (`/api/cart`) 🔒 Auth required
+
+### 6.1 Xem giỏ hàng
+```http
+GET /api/cart
+Authorization: Bearer {token}
+```
+
+### 6.2 Thêm sản phẩm
+```http
+POST /api/cart
+Authorization: Bearer {token}
+```
+```json
+{
+  "productId": 1,
+  "quantity": 2
+}
+```
+
+### 6.3 Cập nhật số lượng
+```http
+PUT /api/cart/{cartItemId}?quantity=3
+Authorization: Bearer {token}
+```
+
+### 6.4 Xóa sản phẩm khỏi giỏ
+```http
+DELETE /api/cart/{cartItemId}
+Authorization: Bearer {token}
+```
+
+### 6.5 Xóa toàn bộ giỏ hàng
+```http
+DELETE /api/cart
+Authorization: Bearer {token}
+```
+
+---
+
+## 📋 7. Đơn hàng (`/api/orders`) 🔒 Auth required
+
+### 7.1 Đặt hàng
+```http
+POST /api/orders
+Authorization: Bearer {token}
+```
+```json
+{
+  "receiverName": "Nguyễn Văn A",
+  "receiverPhone": "0123456789",
+  "receiverAddress": "123 Đường ABC, Quận 1, TP.HCM",
+  "paymentMethod": "COD",
+  "note": "Giao giờ hành chính"
+}
+```
+> `paymentMethod`: `COD` hoặc `BANK_TRANSFER`
+
+### 7.2 Lịch sử đơn hàng
+```http
+GET /api/orders?page=0&size=10
+Authorization: Bearer {token}
+```
+
+### 7.3 Chi tiết đơn hàng
+```http
+GET /api/orders/{orderCode}
+Authorization: Bearer {token}
+```
+
+---
+
+## 👤 8. Quản lý tài khoản (`/api/user`) 🔒 Auth required
+
+### 8.1 Xem thông tin cá nhân
+```http
+GET /api/user/profile
+Authorization: Bearer {token}
+```
+
+### 8.2 Cập nhật thông tin
+```http
+PUT /api/user/profile
+Authorization: Bearer {token}
+```
+```json
+{
+  "fullName": "Nguyễn Văn B",
+  "phone": "0987654321",
+  "address": "456 Đường XYZ"
+}
+```
+
+---
+
+## 🛡️ 9. Admin APIs (`/api/admin`) 🔒 ADMIN role required
+
+### 9.1 Dashboard
+```http
+GET /api/admin/dashboard?year=2026
+```
+
+### 9.2 Quản lý sản phẩm
+```http
+GET    /api/admin/products?page=0&size=10
+POST   /api/admin/products          (multipart: product + images)
+PUT    /api/admin/products/{id}     (multipart: product + images)
+DELETE /api/admin/products/{id}
+```
+
+### 9.3 Quản lý danh mục
+```http
+GET    /api/admin/categories
+POST   /api/admin/categories       { "name": "...", "description": "..." }
+PUT    /api/admin/categories/{id}
+DELETE /api/admin/categories/{id}
+```
+
+### 9.4 Quản lý đơn hàng
+```http
+GET /api/admin/orders?page=0&size=10
+GET /api/admin/orders/{id}
+PUT /api/admin/orders/{id}/status?status=SHIPPING
+```
+> Trạng thái: `PENDING`, `SHIPPING`, `DELIVERED`, `CANCELLED`
+
+### 9.5 Quản lý người dùng
+```http
+GET    /api/admin/users?page=0&size=10
+PUT    /api/admin/users/{id}/toggle-status   (khóa/mở tài khoản)
+DELETE /api/admin/users/{id}
+```
+
+### 9.6 Quản lý đánh giá
+```http
+GET    /api/admin/reviews?page=0&size=10
+DELETE /api/admin/reviews/{id}
+```
+
+### 9.7 Quản lý banner
+```http
+GET    /api/admin/banners
+POST   /api/admin/banners
+PUT    /api/admin/banners/{id}
+DELETE /api/admin/banners/{id}
+```
+
+---
+
+## 📤 10. Upload file (`/api/uploads`)
+
+### 10.1 Upload 1 file
+```http
+POST /api/uploads
+Content-Type: multipart/form-data
+```
+
+### 10.2 Upload nhiều file
+```http
+POST /api/uploads/multiple
+Content-Type: multipart/form-data
+```
+
+---
+
+## 🔧 Default Accounts
+
+| Role | Email | Password |
+|------|-------|----------|
+| Admin | admin@tuixach.com | admin123 |
+
+## 📊 Default Categories
+
+| ID | Tên |
+|----|-----|
+| 1 | Túi xách nữ |
+| 2 | Túi xách nam |
+| 3 | Túi đeo chéo |
+| 4 | Balo |
+| 5 | Ví |

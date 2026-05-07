@@ -1,0 +1,22 @@
+<div class="d-flex flex-column min-vh-100 bg-light">
+  <app-navbar *ngIf="!isAdminRoute"></app-navbar>
+
+  <main class="flex-grow-1" [style.padding-top]="isAdminRoute ? '0' : '72px'">
+    <router-outlet></router-outlet>
+
+    <!-- Floating Support Call Button -->
+    <button (click)="startCall()"
+        class="fixed-bottom position-fixed bottom-0 end-0 m-4 btn btn-black rounded-circle shadow-lg d-flex align-items-center justify-content-center p-0 border-0 floating-support-btn"
+        style="width: 56px; height: 56px; right: 90px !important; bottom: 30px !important; z-index: 1050; background: #000 !important; color: #c5a059 !important; border: 2px solid #c5a059 !important;"
+        aria-label="Gọi hỗ trợ">
+        <i class="bi bi-telephone-fill fs-5"></i>
+    </button>
+
+    <app-ai-chatbot></app-ai-chatbot>
+  </main>
+
+  <app-footer *ngIf="!isAdminRoute"></app-footer>
+  <app-voice-call></app-voice-call>
+  <app-toast-host></app-toast-host>
+</div>
+

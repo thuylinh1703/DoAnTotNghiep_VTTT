@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx ng *)",
+      "Bash(xargs grep *)",
+      "Bash(./mvnw -q -DskipTests compile)",
+      "Bash(mvn -v)",
+      "Bash(mvn -q -DskipTests -o compile)",
+      "Bash(echo \"EXIT=$?\")",
+      "Bash(npx --no-install tsc -p tsconfig.app.json --noEmit)"
+    ]
+  }
+}

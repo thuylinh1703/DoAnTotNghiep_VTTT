@@ -1,0 +1,73 @@
+<div class="row g-4 py-4 border-bottom align-items-center position-relative" *ngIf="item">
+    <!-- Mobile delete (top-right) -->
+    <button (click)="onRemove()"
+            class="btn btn-link text-muted position-absolute top-0 end-0 p-3 d-sm-none"
+            aria-label="Xóa">
+        <i class="bi bi-x-lg"></i>
+    </button>
+
+    <!-- Product Details -->
+    <div class="col-12 col-sm-5">
+        <div class="d-flex align-items-center gap-4">
+            <div [routerLink]="['/products', item.productId]"
+                 class="flex-shrink-0 bg-light border overflow-hidden cursor-pointer"
+                 style="width: 100px; height: 100px;">
+                <img *ngIf="item.productImage" [src]="getImageUrl(item.productImage)" class="w-100 h-100 object-cover" [alt]="item.productName">
+                <div *ngIf="!item.productImage" class="w-100 h-100 d-flex align-items-center justify-content-center text-muted opacity-20">
+                    <i class="bi bi-image"></i>
+                </div>
+            </div>
+            <div class="flex-grow-1 pe-4">
+                <a [routerLink]="['/products', item.productId]"
+                   class="display-font fs-6 text-dark text-decoration-none d-block mb-1 line-clamp-2">
+                    {{ item.productName }}
+                </a>
+                <p class="text-muted small text-uppercase tracking-widest mb-1" style="font-size: 0.65rem;">{{ item.brand || 'LVT Heritage' }}</p>
+                <div *ngIf="lowStockWarning" class="text-danger small fw-bold" style="font-size: 0.75rem;">
+                    <i class="bi bi-exclamation-circle me-1"></i> {{ lowStockWarning }}
+                </div>
+                <div class="d-sm-none mt-2 fw-bold text-dark">{{ item.price | number:'1.0-0' }}&#8363;</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Price (desktop) -->
+    <div class="col-sm-2 d-none d-sm-block text-center text-muted">
+        {{ item.price | number:'1.0-0' }}&#8363;
+    </div>
+
+    <!-- Quantity Picker -->
+    <div class="col-12 col-sm-2">
+        <div class="input-group input-group-sm border bg-light" style="max-width: 120px;">
+            <button (click)="decrement()" class="btn btn-link text-dark text-decoration-none px-2 py-1" type="button">
+                <i class="bi bi-dash"></i>
+            </button>
+            <input type="number" [(ngModel)]="item.quantity" (ngModelChange)="onQuantityChange($event)"
+                   class="form-control border-0 bg-transparent text-center shadow-none p-0 fw-bold" 
+                   style="font-size: 0.85rem;" min="1" readonly>
+            <button (click)="increment()" [disabled]="atMaxStock" 
+                    class="btn btn-link text-dark text-decoration-none px-2 py-1" type="button">
+                <i class="bi bi-plus"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Total + Actions (desktop) -->
+    <div class="col-sm-3 d-none d-sm-flex align-items-center justify-content-end gap-4">
+        <span class="fs-6 fw-bold text-dark">{{ item.subtotal | number:'1.0-0' }}&#8363;</span>
+        <button (click)="onRemove()" class="btn btn-link text-muted p-0 hover-text-danger transition-all" aria-label="Xóa">
+            <i class="bi bi-trash3 fs-5"></i>
+        </button>
+    </div>
+</div>
+
+<style>
+    .hover-text-danger:hover { color: var(--bs-danger) !important; }
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+</style>
+

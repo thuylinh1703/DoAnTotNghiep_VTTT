@@ -1,0 +1,82 @@
+<div class="bg-white pt-5 min-vh-100">
+    <div class="container py-5" *ngIf="post; else stateTpl">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <nav aria-label="breadcrumb" class="mb-5">
+                    <ol class="breadcrumb bg-transparent p-0 small text-uppercase tracking-widest">
+                        <li class="breadcrumb-item"><a routerLink="/blog" class="text-muted text-decoration-none"><i class="bi bi-arrow-left me-1"></i> Trở về tạp chí</a></li>
+                    </ol>
+                </nav>
+
+                <header class="mb-5">
+                    <h1 class="display-font fs-1 mb-4" style="line-height: 1.2;">{{ post.title }}</h1>
+                    
+                    <div class="d-flex align-items-center justify-content-between border-top border-bottom py-3 mb-5">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-dark text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 40px; height: 40px;">
+                                {{ post.authorName ? post.authorName.charAt(0) : 'L' }}
+                            </div>
+                            <div>
+                                <p class="mb-0 fw-bold text-dark small text-uppercase tracking-widest">{{ post.authorName || 'LVT Heritage' }}</p>
+                                <p class="mb-0 text-muted small">{{ post.publishedAt | date:'dd/MM/yyyy' }}</p>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-light btn-sm rounded-circle shadow-sm"><i class="bi bi-facebook"></i></button>
+                            <button class="btn btn-light btn-sm rounded-circle shadow-sm"><i class="bi bi-twitter-x"></i></button>
+                            <button class="btn btn-light btn-sm rounded-circle shadow-sm"><i class="bi bi-link-45deg"></i></button>
+                        </div>
+                    </div>
+
+                    <div *ngIf="post.coverImageUrl" class="mb-5 shadow-sm overflow-hidden" style="border-radius: 0;">
+                        <img [src]="getImageUrl(post.coverImageUrl)" [alt]="post.title" class="w-100 img-fluid" style="max-height: 600px; object-fit: cover;" />
+                    </div>
+                </header>
+
+                <article class="article-content display-font-body" [innerHTML]="safeContent"></article>
+                
+                <div class="mt-5 pt-5 border-top text-center">
+                    <h4 class="display-font mb-4">Chia sẻ cảm nghĩ của bạn?</h4>
+                    <p class="text-muted mb-0">Liên hệ với chúng tôi qua hotline 1900 xxxx để được tư vấn thêm về phong cách.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ng-template #stateTpl>
+        <div class="container py-5 mt-5">
+            <div class="row justify-content-center">
+                <div class="col-md-6 text-center py-5">
+                    <div *ngIf="loading" class="spinner-border text-gold" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <div *ngIf="!loading">
+                        <i class="bi bi-journal-x display-1 text-muted opacity-25 mb-4"></i>
+                        <h2 class="display-font">Không tìm thấy bài viết</h2>
+                        <p class="text-muted mb-4">Bài viết bạn đang tìm kiếm có thể đã bị gỡ bỏ hoặc không tồn tại.</p>
+                        <a routerLink="/blog" class="btn btn-dark rounded-0 px-5 py-3 text-uppercase letter-spacing-wide fw-bold shadow-sm">QUAY LẠI BLOG</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</div>
+
+<style>
+    .article-content {
+        font-size: 1.15rem;
+        line-height: 1.8;
+        color: #333;
+    }
+    .article-content ::ng-deep p { margin-bottom: 2rem; }
+    .article-content ::ng-deep img { max-width: 100%; height: auto; border-radius: 0; margin: 2rem 0; }
+    .article-content ::ng-deep h2, .article-content ::ng-deep h3 { 
+        font-family: 'Playfair Display', serif;
+        margin-top: 3rem;
+        margin-bottom: 1.5rem;
+        color: #111;
+    }
+    .display-font-body { font-family: 'Inter', sans-serif; }
+    .letter-spacing-wide { letter-spacing: 2px; }
+</style>
+

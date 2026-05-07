@@ -1,0 +1,133 @@
+<nav class="navbar fixed-top py-0 border-bottom" 
+     [class.navbar-hidden]="isHidden"
+     style="height: 80px; background-color: #ffffff !important; border-color: #eee !important; z-index: 2000;">
+    <div class="container-fluid h-100 px-lg-5 d-flex align-items-center justify-content-between">
+        
+        <!-- LEFT: Logo -->
+        <div class="d-flex align-items-center">
+            <a class="navbar-brand d-flex align-items-center gap-3" routerLink="/">
+                <div class="bg-black text-white rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 40px; height: 40px; font-size: 18px; font-weight: 900;">L</div>
+                <span class="display-font text-uppercase text-dark fw-bold d-none d-sm-block" style="font-size: 1.1rem; letter-spacing: 3px;">LVT Shop</span>
+            </a>
+        </div>
+
+        <!-- CENTER: Main Menu -->
+        <div class="d-none d-lg-flex align-items-center h-100 mx-auto">
+            <ul class="nav h-100 align-items-center gap-2">
+                <li class="nav-item h-100 d-flex align-items-center">
+                    <a class="nav-link px-3 text-dark fw-bold hover-gold text-uppercase tracking-widest" style="font-size: 0.75rem;" routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">Trang chủ</a>
+                </li>
+                <li class="nav-item h-100 d-flex align-items-center">
+                    <a class="nav-link px-3 text-dark fw-bold hover-gold text-uppercase tracking-widest" style="font-size: 0.75rem;" routerLink="/products" routerLinkActive="active-link">Sản phẩm</a>
+                </li>
+                <li class="nav-item h-100 d-flex align-items-center">
+                    <a class="nav-link px-3 text-dark fw-bold hover-gold text-uppercase tracking-widest" style="font-size: 0.75rem;" routerLink="/blog" routerLinkActive="active-link">Blog</a>
+                </li>
+                <li class="nav-item h-100 d-flex align-items-center">
+                    <a class="nav-link px-3 text-dark fw-bold hover-gold text-uppercase tracking-widest" style="font-size: 0.75rem;" routerLink="/promotions" routerLinkActive="active-link">Khuyến mãi</a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- RIGHT: Tools & User -->
+        <div class="d-flex align-items-center gap-3 gap-md-4">
+            <!-- Search -->
+            <div class="d-none d-md-block">
+                <div class="position-relative">
+                    <i class="bi bi-search text-muted position-absolute start-3 top-50 translate-middle-y" style="left: 15px; z-index: 5;"></i>
+                    <input type="text" 
+                           class="form-control bg-light border-0 text-dark rounded-pill ps-5 py-2 shadow-none" 
+                           style="width: 220px; font-size: 0.8rem; background: #f8f9fa !important;" 
+                           placeholder="Tìm kiếm..."
+                           (keyup.enter)="onSearch($event)">
+                </div>
+            </div>
+
+            <!-- Cart -->
+            <a routerLink="/cart" class="text-dark hover-gold position-relative d-flex align-items-center">
+                <i class="bi bi-bag fs-4"></i>
+            </a>
+
+            <!-- User Area -->
+            <ng-container *ngIf="!isLoggedIn(); else userMenu">
+                <div class="d-flex align-items-center gap-2 gap-md-3">
+                    <a routerLink="/login" class="text-dark text-decoration-none hover-gold fw-bold d-none d-sm-block" style="font-size: 0.75rem;">ĐĂNG NHẬP</a>
+                    <a routerLink="/register" class="btn btn-dark btn-sm px-4 rounded-0 fw-bold" style="font-size: 0.7rem;">ĐĂNG KÝ</a>
+                </div>
+            </ng-container>
+
+            <ng-template #userMenu>
+                <div class="d-flex align-items-center gap-3">
+                    <div class="dropdown">
+                        <a class="dropdown-toggle d-flex align-items-center text-decoration-none" href="#" role="button" data-bs-toggle="dropdown">
+                            <div class="bg-black text-white rounded-circle d-flex align-items-center justify-content-center shadow-sm fw-bold" style="width: 35px; height: 35px; font-size: 14px;">
+                                {{ (authService.getUser()?.fullName || 'U').charAt(0) }}
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow-xl rounded-0 mt-3 py-3" style="min-width: 240px; background: #ffffff; border: 1px solid #eee !important;">
+                            <li class="px-4 py-3 mb-2 border-bottom border-light">
+                                <p class="mb-0 text-muted text-uppercase tracking-widest" style="font-size: 0.6rem;">Tài khoản</p>
+                                <p class="mb-0 fw-bold text-dark fs-6 text-truncate">{{ authService.getUser()?.fullName }}</p>
+                            </li>
+                            <li><a class="dropdown-item py-2 px-4 text-dark hover-gold" routerLink="/account/profile"><i class="bi bi-person me-2"></i>Hồ sơ cá nhân</a></li>
+                            <li><a class="dropdown-item py-2 px-4 text-dark hover-gold" routerLink="/account/orders"><i class="bi bi-bag-check me-2"></i>Đơn hàng</a></li>
+                            <li *ngIf="isAdmin()"><hr class="dropdown-divider border-light"></li>
+                            <li *ngIf="isAdmin()"><a class="dropdown-item py-2 px-4 text-gold fw-bold" routerLink="/admin"><i class="bi bi-shield-lock me-2"></i>TRANG QUẢN TRỊ</a></li>
+                            <li><hr class="dropdown-divider border-light"></li>
+                            <li><button class="dropdown-item py-2 px-4 text-danger fw-bold" (click)="logout()"><i class="bi bi-box-arrow-right me-2"></i>ĐĂNG XUẤT</button></li>
+                        </ul>
+                    </div>
+                    <!-- Quick Logout Button -->
+                    <button class="btn btn-link p-0 text-muted hover-danger border-0 shadow-none d-none d-md-block" (click)="logout()">
+                        <i class="bi bi-box-arrow-right fs-4"></i>
+                    </button>
+                </div>
+            </ng-template>
+
+            <!-- Mobile Menu Toggle -->
+            <button class="btn btn-link text-dark p-0 d-lg-none shadow-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
+                <i class="bi bi-list fs-1"></i>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- Mobile Menu (Offcanvas) -->
+<div class="offcanvas offcanvas-end bg-white text-dark" tabindex="-1" id="mobileMenu">
+    <div class="offcanvas-header border-bottom py-4">
+        <h5 class="offcanvas-title display-font tracking-widest text-uppercase">Menu</h5>
+        <button type="button" class="btn-close shadow-none" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body p-0">
+        <ul class="list-unstyled">
+            <li><a class="d-block py-3 px-4 text-dark text-decoration-none border-bottom border-light hover-gold" routerLink="/" data-bs-dismiss="offcanvas">Trang chủ</a></li>
+            <li><a class="d-block py-3 px-4 text-dark text-decoration-none border-bottom border-light hover-gold" routerLink="/products" data-bs-dismiss="offcanvas">Sản phẩm</a></li>
+            <li><a class="d-block py-3 px-4 text-dark text-decoration-none border-bottom border-light hover-gold" routerLink="/blog" data-bs-dismiss="offcanvas">Blog</a></li>
+            <li><a class="d-block py-3 px-4 text-dark text-decoration-none border-bottom border-light hover-gold" routerLink="/promotions" data-bs-dismiss="offcanvas">Khuyến mãi</a></li>
+            <li *ngIf="isAdmin()"><a class="d-block py-3 px-4 text-gold text-decoration-none border-bottom border-light" routerLink="/admin" data-bs-dismiss="offcanvas">Quản trị viên</a></li>
+        </ul>
+    </div>
+</div>
+
+<style>
+    .navbar {
+        transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        box-shadow: 0 2px 15px rgba(0,0,0,0.03);
+    }
+    .navbar-hidden { transform: translateY(-100%); }
+    .hover-gold:hover { color: #c5a059 !important; }
+    .hover-danger:hover { color: #ff3b30 !important; }
+    .active-link { color: #c5a059 !important; position: relative; }
+    .active-link::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 1rem;
+        right: 1rem;
+        height: 2px;
+        background: #c5a059;
+    }
+    .dropdown-item { color: #333 !important; transition: all 0.2s; font-size: 0.85rem; }
+    .dropdown-item:hover { background: #f8f9fa; padding-left: 1.75rem; }
+    .shadow-xl { box-shadow: 0 10px 40px rgba(0,0,0,0.1) !important; }
+</style>

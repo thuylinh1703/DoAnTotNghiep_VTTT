@@ -1,0 +1,62 @@
+<div class="promotion-container">
+    <!-- Header Section -->
+    <header class="promo-header">
+        <div class="container">
+            <h1 class="display-font">Khuyến Mãi Đặc Biệt</h1>
+            <p class="subtitle">Khám phá các ưu đãi độc quyền dành riêng cho bạn</p>
+        </div>
+    </header>
+
+    <div class="container py-5">
+        <!-- Loading State -->
+        <div *ngIf="loading" class="text-center py-5">
+            <div class="spinner-border text-gold" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3 text-muted">Đang tải các ưu đãi...</p>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="!loading && coupons.length === 0" class="text-center py-5 empty-state">
+            <i class="bi bi-ticket-perforated mb-4 d-block" style="font-size: 4rem; color: #ddd;"></i>
+            <h3>Hiện chưa có chương trình khuyến mãi nào</h3>
+            <p class="text-muted">Quay lại sau để cập nhật những ưu đãi mới nhất nhé!</p>
+            <a routerLink="/products" class="btn btn-dark rounded-0 px-5 mt-3">TIẾP TỤC MUA SẮM</a>
+        </div>
+
+        <!-- Coupons Grid -->
+        <div *ngIf="!loading && coupons.length > 0" class="row g-4">
+            <div *ngFor="let coupon of coupons" class="col-md-6 col-lg-4">
+                <div class="coupon-card">
+                    <div class="coupon-left">
+                        <div class="discount-badge">
+                            <span class="amount">{{ coupon.type === 'PERCENTAGE' ? coupon.value : (coupon.value / 1000) }}</span>
+                            <span class="unit">{{ coupon.type === 'PERCENTAGE' ? '%' : 'K' }}</span>
+                        </div>
+                    </div>
+                    <div class="coupon-right">
+                        <div class="coupon-header">
+                            <h4 class="coupon-title">{{ getDiscountText(coupon) }}</h4>
+                            <span class="coupon-tag">{{ coupon.code }}</span>
+                        </div>
+                        <p class="coupon-desc">{{ coupon.description }}</p>
+                        <div class="coupon-meta">
+                            <span class="min-order"><i class="bi bi-cart-check me-1"></i>{{ getMinOrderText(coupon.minOrderAmount) }}</span>
+                            <span class="expiry"><i class="bi bi-clock me-1"></i>HSD: {{ coupon.endDate | date:'dd/MM/yyyy' }}</span>
+                        </div>
+                        <div class="coupon-action mt-3">
+                            <button (click)="copyCode(coupon.code)" 
+                                    class="btn btn-copy" 
+                                    [class.copied]="copiedCode === coupon.code">
+                                <i class="bi" [class.bi-copy]="copiedCode !== coupon.code" [class.bi-check2]="copiedCode === coupon.code"></i>
+                                {{ copiedCode === coupon.code ? 'ĐÃ SAO CHÉP' : 'SAO CHÉP MÃ' }}
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-dots-top"></div>
+                    <div class="card-dots-bottom"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
